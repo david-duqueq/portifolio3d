@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>David Kauê - Portfólio 3D & Devlog</title>
+    
+    <!-- Script do Google Model Viewer para visualização 3D interativa -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
     <style>
         :root {
             --bg-color: #121214;
@@ -18,16 +22,20 @@
 
         header {
             text-align: center;
-            padding: 3rem 1rem 2.5rem;
+            padding: 2.5rem 1rem 2rem;
             background: linear-gradient(180deg, #1a1a22 0%, var(--bg-color) 100%);
             border-bottom: 1px solid #2a2a32;
         }
-        .logo {
-            width: 120px;
-            height: auto;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 10px rgba(0,210,255,0.3));
+
+        /* Estilo do visualizador 3D da logo no topo */
+        .logo-viewer {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+            background-color: transparent;
+            --poster-color: transparent;
         }
+
         header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
         header p { color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem; }
 
@@ -61,7 +69,14 @@
             display: flex;
             flex-direction: column;
         }
-        .card img { width: 100%; height: 220px; object-fit: cover; background: #000; }
+        
+        /* Estilo para os visualizadores 3D dentro dos cards */
+        model-viewer {
+            width: 100%;
+            height: 220px;
+            background-color: #0b0b0e;
+        }
+
         .card-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .card-body h3 { margin-bottom: 0.5rem; }
         .card-body p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
@@ -96,9 +111,19 @@
 <body>
 
     <header>
-        <img src="DKB.png" alt="Logo DKB" class="logo">
+        <!-- Logo 3D Interativa no Topo -->
+        <model-viewer 
+            src="https://release-assets.githubusercontent.com/github-production-release-asset/1457722580/122fc9f1-1140-48bd-b158-2670e72be6df?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-15T13%3A47%3A13Z&rscd=attachment%3B+filename%3DDKB_dbk_loog.glb&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-15T12%3A47%3A05Z&ske=2026-11-15T13%3A47%3A13Z&sks=b&skv=2018-11-09&sig=ti29oDz9Q1zPB6kC%2FzRX01gJyt5VOQopzBua1YErUko%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDc0NzEyNSwibmJmIjoxNzk0NzQ2ODI1LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.kBfJm9xBb2HYP9XiQuywG3n7Hn2vIF32ElndyweI7Ug" 
+            alt="Logo DKB 3D" 
+            auto-rotate 
+            camera-controls 
+            disable-zoom
+            class="logo-viewer">
+        </model-viewer>
+
         <h1>David Kauê - Portfólio 3D</h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
+        
         <div class="social-links">
             <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank">YouTube</a>
             <a href="https://www.instagram.com/dkb.david/" target="_blank">Instagram</a>
@@ -114,7 +139,15 @@
                 
                 <!-- Modelo: Prédio Haussmann -->
                 <div class="card">
-                    <img src="https://via.placeholder.com/400x220/18181c/00d2ff?text=Predio+Haussmann" alt="Prédio Haussmann 3D">
+                    <!-- Visualizador 3D Interativo do Modelo (caso queira colocar o GLB dele depois, basta trocar o src) -->
+                    <model-viewer 
+                        src="https://release-assets.githubusercontent.com/github-production-release-asset/1457722580/122fc9f1-1140-48bd-b158-2670e72be6df?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-15T13%3A47%3A13Z&rscd=attachment%3B+filename%3DDKB_dbk_loog.glb&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-15T12%3A47%3A05Z&ske=2026-11-15T13%3A47%3A13Z&sks=b&skv=2018-11-09&sig=ti29oDz9Q1zPB6kC%2FzRX01gJyt5VOQopzBua1YErUko%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDc0NzEyNSwibmJmIjoxNzk0NzQ2ODI1LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.kBfJm9xBb2HYP9XiQuywG3n7Hn2vIF32ElndyweI7Ug" 
+                        alt="Prédio Haussmann 3D" 
+                        auto-rotate 
+                        camera-controls 
+                        shadow-intensity="1">
+                    </model-viewer>
+
                     <div class="card-body">
                         <div>
                             <h3>Prédio Haussmann</h3>
@@ -124,9 +157,11 @@
                     </div>
                 </div>
 
-                <!-- Segundo card de exemplo (pode editar ou remover) -->
+                <!-- Segundo card de exemplo -->
                 <div class="card">
-                    <img src="https://via.placeholder.com/400x220/18181c/00d2ff?text=Em+Breve" alt="Novo Modelo">
+                    <div style="width: 100%; height: 220px; background-color: #0b0b0e; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                        <span>Em Breve</span>
+                    </div>
                     <div class="card-body">
                         <div>
                             <h3>Próximo Asset</h3>
@@ -161,7 +196,6 @@
 
     <footer>
         <p>© 2026 David Kauê. Hospedado com GitHub Pages.</p>
-        <p>davidduqueq@gmail.com</p>
     </footer>
 
 </body>
