@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>David Kauê - Portfólio 3D & Devlog</title>
-    
-    <!-- Script do Google Model Viewer para visualização 3D interativa -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-
     <style>
         :root {
             --bg-color: #121214;
@@ -22,20 +18,10 @@
 
         header {
             text-align: center;
-            padding: 2.5rem 1rem 2rem;
+            padding: 3rem 1rem 2.5rem;
             background: linear-gradient(180deg, #1a1a22 0%, var(--bg-color) 100%);
             border-bottom: 1px solid #2a2a32;
         }
-
-        /* Estilo do visualizador 3D da logo no topo */
-        .logo-viewer {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 1rem;
-            background-color: transparent;
-            --poster-color: transparent;
-        }
-
         header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
         header p { color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem; }
 
@@ -70,11 +56,15 @@
             flex-direction: column;
         }
         
-        /* Estilo para os visualizadores 3D dentro dos cards */
-        model-viewer {
+        .card-preview {
             width: 100%;
             height: 220px;
             background-color: #0b0b0e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
         .card-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
@@ -111,16 +101,6 @@
 <body>
 
     <header>
-        <!-- Logo 3D Interativa no Topo -->
-        <model-viewer 
-            src="https://release-assets.githubusercontent.com/github-production-release-asset/1457722580/122fc9f1-1140-48bd-b158-2670e72be6df?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-15T13%3A47%3A13Z&rscd=attachment%3B+filename%3DDKB_dbk_loog.glb&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-15T12%3A47%3A05Z&ske=2026-11-15T13%3A47%3A13Z&sks=b&skv=2018-11-09&sig=ti29oDz9Q1zPB6kC%2FzRX01gJyt5VOQopzBua1YErUko%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDc0NzEyNSwibmJmIjoxNzk0NzQ2ODI1LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.kBfJm9xBb2HYP9XiQuywG3n7Hn2vIF32ElndyweI7Ug" 
-            alt="Logo DKB 3D" 
-            auto-rotate 
-            camera-controls 
-            disable-zoom
-            class="logo-viewer">
-        </model-viewer>
-
         <h1>David Kauê - Portfólio 3D</h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
         
@@ -137,17 +117,9 @@
             <h2>Modelos 3D para Download</h2>
             <div class="models-grid">
                 
-                <!-- Modelo: Prédio Haussmann -->
+                <!-- Modelo 1: Prédio Haussmann -->
                 <div class="card">
-                    <!-- Visualizador 3D Interativo do Modelo (caso queira colocar o GLB dele depois, basta trocar o src) -->
-                    <model-viewer 
-                        src="https://release-assets.githubusercontent.com/github-production-release-asset/1457722580/122fc9f1-1140-48bd-b158-2670e72be6df?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-15T13%3A47%3A13Z&rscd=attachment%3B+filename%3DDKB_dbk_loog.glb&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-15T12%3A47%3A05Z&ske=2026-11-15T13%3A47%3A13Z&sks=b&skv=2018-11-09&sig=ti29oDz9Q1zPB6kC%2FzRX01gJyt5VOQopzBua1YErUko%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDc0NzEyNSwibmJmIjoxNzk0NzQ2ODI1LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.kBfJm9xBb2HYP9XiQuywG3n7Hn2vIF32ElndyweI7Ug" 
-                        alt="Prédio Haussmann 3D" 
-                        auto-rotate 
-                        camera-controls 
-                        shadow-intensity="1">
-                    </model-viewer>
-
+                    <div class="card-preview">Prédio Haussmann</div>
                     <div class="card-body">
                         <div>
                             <h3>Prédio Haussmann</h3>
@@ -157,17 +129,16 @@
                     </div>
                 </div>
 
-                <!-- Segundo card de exemplo -->
+                <!-- Modelo 2: Logo 3D (DKB) -->
                 <div class="card">
-                    <div style="width: 100%; height: 220px; background-color: #0b0b0e; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                        <span>Em Breve</span>
-                    </div>
+                    <div class="card-preview">Logo 3D DKB</div>
                     <div class="card-body">
                         <div>
-                            <h3>Próximo Asset</h3>
-                            <p>Novos modelos 3D e pacotes de props estarão disponíveis em breve para download.</p>
+                            <h3>Logo Oficial DKB (3D)</h3>
+                            <p>Arquivo 3D da minha logo oficial modelada, disponível para estudo e inspeção.</p>
                         </div>
-                        <a href="#" class="btn-download" style="opacity: 0.5; pointer-events: none;">Em Breve</a>
+                        <!-- Substitua o link abaixo pelo link da Release onde você enviou o arquivo da logo -->
+                        <a href="https://github.com/david-duqueq/portifolio3d/releases/download/5x/DKB_dbk_loog.glb" class="btn-download" target="_blank">Baixar Logo (.GLB)</a>
                     </div>
                 </div>
 
