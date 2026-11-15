@@ -6,6 +6,8 @@
     <title>David Kauê - Portfólio 3D & Devlog</title>
     <!-- Script do Google Model Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <!-- Fonte retrô para o Easter Egg Nokia Snake II -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #121214;
@@ -13,6 +15,15 @@
             --accent: #00d2ff;
             --text-main: #f4f4f6;
             --text-muted: #a0a0ab;
+
+            /* Cores do Easter Egg Nokia 3310 */
+            --nokia-body: #232d42;
+            --nokia-body-dark: #161d2b;
+            --nokia-bezel: #8b95a5;
+            --lcd-bg: #8bac0f;
+            --lcd-bg-dim: #82a10e;
+            --lcd-pixel: #1d2b11;
+            --lcd-ghost: rgba(29, 43, 17, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -31,6 +42,19 @@
             filter: drop-shadow(0 0 10px rgba(0,210,255,0.3));
         }
         header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+        /* Estilo do Gatilho Easter Egg no nome David Kauê */
+        #easter-egg-trigger {
+            cursor: pointer;
+            transition: color 0.25s ease, text-shadow 0.25s ease;
+            border-bottom: 1px dashed transparent;
+        }
+        #easter-egg-trigger:hover {
+            color: var(--accent);
+            text-shadow: 0 0 12px rgba(0, 210, 255, 0.45);
+            border-bottom-color: rgba(0, 210, 255, 0.5);
+        }
+
         header p { color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem; }
 
         .social-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
@@ -93,13 +117,310 @@
         .devlog-post p { color: var(--text-muted); }
 
         footer { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
+
+        /* =========================================================
+           ESTILOS DO EASTER EGG: MODAL & NOKIA 3310 SNAKE II
+           ========================================================= */
+        #snake-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 14, 0.88);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            overflow-y: auto;
+        }
+        #snake-modal-overlay.active {
+            display: flex;
+            animation: fadeInModal 0.2s ease-out;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .snake-modal-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            max-width: 100%;
+        }
+
+        .snake-close-bar {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 0 4px;
+        }
+        .snake-badge {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+        #btn-close-snake {
+            background: #2a2a35;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        #btn-close-snake:hover {
+            background: #ff3b5c;
+            border-color: #ff3b5c;
+        }
+
+        .nokia-phone {
+            width: 100%;
+            max-width: 335px;
+            background: linear-gradient(145deg, #2d3a54 0%, var(--nokia-body) 45%, var(--nokia-body-dark) 100%);
+            border-radius: 36px 36px 46px 46px;
+            padding: 16px 18px 22px;
+            box-shadow:
+                0 22px 50px rgba(0, 0, 0, 0.8),
+                inset 0 2px 3px rgba(255, 255, 255, 0.2),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.6);
+            border: 2px solid #121722;
+            user-select: none;
+        }
+
+        .earpiece {
+            width: 54px;
+            height: 7px;
+            background: #0f141d;
+            border-radius: 10px;
+            margin: 0 auto 10px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.12);
+        }
+
+        .screen-bezel {
+            background: linear-gradient(180deg, #9aa4b4 0%, var(--nokia-bezel) 100%);
+            border-radius: 18px 18px 26px 26px;
+            padding: 10px 12px 12px;
+            box-shadow:
+                inset 0 2px 4px rgba(0,0,0,0.45),
+                0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .brand-label {
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #1c2434;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        .lcd-container {
+            position: relative;
+            background-color: var(--lcd-bg);
+            background-image:
+                linear-gradient(var(--lcd-ghost) 1px, transparent 1px),
+                linear-gradient(90deg, var(--lcd-ghost) 1px, transparent 1px);
+            background-size: 3px 3px;
+            border: 3px solid #495738;
+            border-radius: 6px;
+            padding: 6px;
+            box-shadow:
+                inset 0 3px 8px rgba(0, 0, 0, 0.35),
+                0 1px 0 rgba(255, 255, 255, 0.4);
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        .lcd-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--lcd-pixel);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+            border-bottom: 2px solid var(--lcd-pixel);
+            min-height: 18px;
+        }
+
+        .bonus-hud {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            visibility: hidden;
+        }
+        .bonus-hud.active {
+            visibility: visible;
+        }
+
+        #snake-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            background: transparent;
+        }
+
+        .lcd-overlay {
+            position: absolute;
+            inset: 6px;
+            background: rgba(139, 172, 15, 0.96);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--lcd-pixel);
+            padding: 8px;
+            z-index: 5;
+        }
+        .lcd-overlay.hidden {
+            display: none;
+        }
+
+        .lcd-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .lcd-sub {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7.5px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .lcd-option {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 4px 6px;
+            margin: 2px 0;
+            width: 94%;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .lcd-option.selected {
+            background: var(--lcd-pixel);
+            color: var(--lcd-bg);
+        }
+
+        .lcd-start-btn {
+            margin-top: 6px;
+            background: var(--lcd-pixel);
+            color: var(--lcd-bg);
+            border: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        .soft-keys-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding: 0 6px;
+        }
+
+        .btn-soft {
+            width: 72px;
+            height: 28px;
+            border-radius: 14px;
+            border: 1px solid #0e131d;
+            background: linear-gradient(180deg, #dce3ee 0%, #aeb8c9 100%);
+            color: #161d2b;
+            font-weight: 800;
+            font-size: 9px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #101622, inset 0 1px 1px #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-soft:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #101622;
+        }
+
+        .sound-toggle {
+            font-size: 9px;
+            color: #9aa4b4;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .dpad-area {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 56px);
+            grid-template-rows: repeat(3, 36px);
+            gap: 5px;
+        }
+
+        .key-btn {
+            border-radius: 14px;
+            border: 1px solid #0f141e;
+            background: linear-gradient(180deg, #eef2f8 0%, #bcc5d4 100%);
+            color: #161d2b;
+            font-weight: 900;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #0f141f, inset 0 1px 1px #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            touch-action: manipulation;
+        }
+        .key-btn span.sub {
+            font-size: 7px;
+            font-weight: 700;
+            color: #465266;
+            margin-top: 2px;
+        }
+        .key-btn:active, .key-btn.pressed {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #0f141f;
+            background: #aeb8c9;
+        }
+        .key-empty {
+            visibility: hidden;
+        }
+
+        .snake-controls-hint {
+            margin-top: 10px;
+            color: #b0b6c4;
+            font-size: 11px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <img src="DKB.png" alt="Logo DKB" class="logo">
-        <h1>David Kauê - Portfólio 3D</h1>
+        <h1><span id="easter-egg-trigger" title="Clique para uma surpresa retrô">David Kauê</span> - Portfólio 3D</h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
         <div class="social-links">
             <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank">YouTube</a>
@@ -177,5 +498,51 @@
         <p>© 2026 David Kauê. Hospedado com GitHub Pages.</p>
     </footer>
 
-</body>
-</html>
+    <!-- =========================================================
+         MODAL EASTER EGG: NOKIA 3310 SNAKE II
+         ========================================================= -->
+    <div id="snake-modal-overlay" aria-hidden="true">
+        <div class="snake-modal-wrapper">
+            <div class="snake-close-bar">
+                <span class="snake-badge">EASTER EGG // NOKIA 3310</span>
+                <button id="btn-close-snake" type="button">FECHAR [ESC]</button>
+            </div>
+
+            <div class="nokia-phone">
+                <div class="earpiece"></div>
+
+                <div class="screen-bezel">
+                    <div class="brand-label">NOKIA</div>
+
+                    <div class="lcd-container">
+                        <div class="lcd-hud">
+                            <span id="hud-score">0000</span>
+                            <div id="bonus-hud" class="bonus-hud">
+                                <span id="bonus-icon">🐞</span>
+                                <span id="bonus-timer">20</span>
+                            </div>
+                            <span id="hud-hi">HI:0000</span>
+                        </div>
+
+                        <canvas id="snake-canvas" width="240" height="144"></canvas>
+
+                        <!-- Tela de Menu Inicial -->
+                        <div id="screen-menu" class="lcd-overlay">
+                            <div class="lcd-title">SNAKE II</div>
+                            <div class="lcd-option selected" data-menu="0">▶ NOVO JOGO</div>
+                            <div class="lcd-option" data-menu="1">VELOCIDADE: <span id="menu-level">7</span></div>
+                            <div class="lcd-option" data-menu="2">LABIRINTO: <span id="menu-maze">LIVRE</span></div>
+                            <button id="btn-direct-play" class="lcd-start-btn" type="button">▶ JOGAR AGORA</button>
+                        </div>
+
+                        <!-- Tela de Pausa -->
+                        <div id="screen-pause" class="lcd-overlay hidden">
+                            <div class="lcd-title">PAUSA</div>
+                            <div class="lcd-sub">APERTE OK OU P<br>PARA CONTINUAR</div>
+                        </div>
+
+                        <!-- Tela de Game Over -->
+                        <div id="screen-gameover" class="lcd-overlay hidden">
+                            <div class="lcd-title">FIM DE JOGO</div>
+                            <div class="lcd-sub" id="gameover-stats">PONTOS: 0000</div>
+                            <button id="btn-restart" class="lcd-start-btn" type="butto
