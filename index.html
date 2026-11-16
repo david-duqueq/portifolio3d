@@ -6,7 +6,7 @@
     <title>David Kauê - Portfólio 3D & Devlog</title>
     <!-- Script do Google Model Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-    <!-- Fonte retrô para o Easter Egg Nokia Snake II -->
+    <!-- Fonte retrô para o Easter Egg DKB Arcade -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,14 +16,13 @@
             --text-main: #f4f4f6;
             --text-muted: #a0a0ab;
 
-            /* Cores do Easter Egg Nokia 3310 */
-            --nokia-body: #232d42;
-            --nokia-body-dark: #161d2b;
-            --nokia-bezel: #8b95a5;
-            --lcd-bg: #8bac0f;
-            --lcd-bg-dim: #82a10e;
-            --lcd-pixel: #1d2b11;
-            --lcd-ghost: rgba(29, 43, 17, 0.08);
+            /* Cores do Easter Egg DKB Arcade */
+            --console-body: #262936;
+            --console-body-dark: #14151c;
+            --console-bezel: #0b0d12;
+            --lcd-bg: #06141b;
+            --lcd-pixel: #00d2ff;
+            --lcd-ghost: rgba(0, 210, 255, 0.045);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -124,7 +123,7 @@
         footer { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
 
         /* =========================================================
-           ESTILOS DO EASTER EGG: MODAL & NOKIA 3310 SNAKE II
+           ESTILOS DO EASTER EGG: DKB ARCADE
            ========================================================= */
         #snake-modal-overlay {
             display: none;
@@ -186,47 +185,68 @@
             border-color: #ff3b5c;
         }
 
-        .nokia-phone {
+        .console {
             width: 100%;
-            max-width: 335px;
-            background: linear-gradient(145deg, #2d3a54 0%, var(--nokia-body) 45%, var(--nokia-body-dark) 100%);
-            border-radius: 36px 36px 46px 46px;
-            padding: 16px 18px 22px;
+            max-width: 340px;
+            background: linear-gradient(160deg, #323646 0%, var(--console-body) 40%, var(--console-body-dark) 100%);
+            border-radius: 22px 22px 72px 22px;
+            padding: 14px 18px 20px;
+            border: 2px solid #0a0b10;
             box-shadow:
                 0 22px 50px rgba(0, 0, 0, 0.8),
-                inset 0 2px 3px rgba(255, 255, 255, 0.2),
+                0 0 0 1px rgba(0, 210, 255, 0.12),
+                inset 0 2px 3px rgba(255, 255, 255, 0.14),
                 inset 0 -4px 8px rgba(0, 0, 0, 0.6);
-            border: 2px solid #121722;
             user-select: none;
+            -webkit-user-select: none;
         }
 
-        .earpiece {
-            width: 54px;
-            height: 7px;
-            background: #0f141d;
-            border-radius: 10px;
-            margin: 0 auto 10px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.12);
+        .console-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+        .power-led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+        .console-brand {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(0, 210, 255, 0.5);
+        }
+        .console-sub {
+            margin-left: auto;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: #6f768a;
         }
 
         .screen-bezel {
-            background: linear-gradient(180deg, #9aa4b4 0%, var(--nokia-bezel) 100%);
-            border-radius: 18px 18px 26px 26px;
-            padding: 10px 12px 12px;
+            background: var(--console-bezel);
+            border-radius: 12px 12px 30px 12px;
+            padding: 10px 12px 14px;
             box-shadow:
-                inset 0 2px 4px rgba(0,0,0,0.45),
-                0 1px 0 rgba(255,255,255,0.2);
+                inset 0 2px 6px rgba(0, 0, 0, 0.9),
+                0 0 0 2px #1d202b,
+                0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
         .brand-label {
             text-align: center;
-            font-family: Arial, Helvetica, sans-serif;
-            font-weight: 900;
-            font-size: 13px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
             letter-spacing: 3px;
-            color: #1c2434;
-            margin-bottom: 6px;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+            color: #4a5266;
+            margin-bottom: 8px;
         }
 
         .lcd-container {
@@ -236,13 +256,12 @@
                 linear-gradient(var(--lcd-ghost) 1px, transparent 1px),
                 linear-gradient(90deg, var(--lcd-ghost) 1px, transparent 1px);
             background-size: 3px 3px;
-            border: 3px solid #495738;
-            border-radius: 6px;
+            border: 2px solid #1b2a33;
+            border-radius: 4px;
             padding: 6px;
-            box-shadow:
-                inset 0 3px 8px rgba(0, 0, 0, 0.35),
-                0 1px 0 rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 0 18px rgba(0, 210, 255, 0.10);
             font-family: 'Press Start 2P', monospace;
+            touch-action: none; /* permite deslizar na tela sem rolar a página */
         }
 
         .lcd-hud {
@@ -256,6 +275,7 @@
             margin-bottom: 4px;
             border-bottom: 2px solid var(--lcd-pixel);
             min-height: 18px;
+            text-shadow: 0 0 5px rgba(0, 210, 255, 0.55);
         }
 
         .bonus-hud {
@@ -274,12 +294,13 @@
             height: auto;
             image-rendering: pixelated;
             background: transparent;
+            filter: drop-shadow(0 0 2px rgba(0, 210, 255, 0.55));
         }
 
         .lcd-overlay {
             position: absolute;
             inset: 6px;
-            background: rgba(139, 172, 15, 0.96);
+            background: rgba(6, 20, 27, 0.96);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -288,6 +309,7 @@
             color: var(--lcd-pixel);
             padding: 8px;
             z-index: 5;
+            text-shadow: 0 0 5px rgba(0, 210, 255, 0.55);
         }
         .lcd-overlay.hidden {
             display: none;
@@ -317,6 +339,7 @@
         .lcd-option.selected {
             background: var(--lcd-pixel);
             color: var(--lcd-bg);
+            text-shadow: none;
         }
 
         .lcd-start-btn {
@@ -330,87 +353,118 @@
             cursor: pointer;
         }
 
-        .soft-keys-row {
+        /* Controles: direcional à esquerda, botões de ação à direita */
+        .controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            padding: 0 6px;
-        }
-
-        .btn-soft {
-            width: 72px;
-            height: 28px;
-            border-radius: 14px;
-            border: 1px solid #0e131d;
-            background: linear-gradient(180deg, #dce3ee 0%, #aeb8c9 100%);
-            color: #161d2b;
-            font-weight: 800;
-            font-size: 9px;
-            cursor: pointer;
-            box-shadow: 0 3px 0 #101622, inset 0 1px 1px #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .btn-soft:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #101622;
-        }
-
-        .sound-toggle {
-            font-size: 9px;
-            color: #9aa4b4;
-            background: rgba(0,0,0,0.28);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 4px 8px;
-            cursor: pointer;
-        }
-
-        .dpad-area {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin-top: 18px;
+            padding: 0 2px;
         }
 
         .dpad-grid {
             display: grid;
-            grid-template-columns: repeat(3, 56px);
-            grid-template-rows: repeat(3, 36px);
-            gap: 5px;
+            grid-template-columns: repeat(3, 46px);
+            grid-template-rows: repeat(3, 46px);
+            gap: 2px;
         }
+        .key-empty { visibility: hidden; }
+        .key-center { background: #1b1d27; border-radius: 4px; }
 
         .key-btn {
-            border-radius: 14px;
-            border: 1px solid #0f141e;
-            background: linear-gradient(180deg, #eef2f8 0%, #bcc5d4 100%);
-            color: #161d2b;
+            border: 1px solid #0a0b10;
+            background: linear-gradient(180deg, #3d4256 0%, #232634 100%);
+            color: #cfd6e6;
             font-weight: 900;
-            font-size: 13px;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 3px 0 #0f141f, inset 0 1px 1px #fff;
+            box-shadow: 0 3px 0 #090a0f, inset 0 1px 1px rgba(255, 255, 255, 0.18);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             line-height: 1;
             touch-action: manipulation;
         }
-        .key-btn span.sub {
-            font-size: 7px;
-            font-weight: 700;
-            color: #465266;
-            margin-top: 2px;
-        }
+        #key-up    { border-radius: 10px 10px 4px 4px; }
+        #key-down  { border-radius: 4px 4px 10px 10px; }
+        #key-left  { border-radius: 10px 4px 4px 10px; }
+        #key-right { border-radius: 4px 10px 10px 4px; }
         .key-btn:active, .key-btn.pressed {
             transform: translateY(2px);
-            box-shadow: 0 1px 0 #0f141f;
-            background: #aeb8c9;
+            box-shadow: 0 1px 0 #090a0f;
+            background: #2d3345;
+            color: var(--accent);
         }
-        .key-empty {
-            visibility: hidden;
+
+        .action-pad {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            padding-right: 4px;
+        }
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .action-item:first-child { margin-top: 22px; }
+
+        .btn-round {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 1px solid #08090d;
+            background: radial-gradient(circle at 35% 30%, #5fe3ff, #0094b8 70%);
+            color: #032029;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #05242d, inset 0 1px 2px rgba(255, 255, 255, 0.5);
+            touch-action: manipulation;
+        }
+        .btn-round.secondary {
+            background: radial-gradient(circle at 35% 30%, #5a6178, #2a2e3d 70%);
+            color: #cfd6e6;
+            box-shadow: 0 4px 0 #0a0b10, inset 0 1px 2px rgba(255, 255, 255, 0.25);
+        }
+        .btn-round:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #05242d;
+        }
+        .btn-round.secondary:active {
+            box-shadow: 0 2px 0 #0a0b10;
+        }
+        .action-cap {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            letter-spacing: 1px;
+            color: #6f768a;
+        }
+
+        .console-foot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .sound-toggle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 1px;
+            color: #9aa4b4;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 210, 255, 0.18);
+            border-radius: 10px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+        .console-signature {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 3px;
+            color: #4a5266;
         }
 
         .snake-controls-hint {
@@ -419,13 +473,18 @@
             font-size: 11px;
             text-align: center;
         }
+
+        /* [NOVO] Ajustes para celular */
+        body.snake-open { overflow: hidden; }
+        @media (max-height: 720px) { .snake-modal-wrapper { zoom: 0.85; } }
+        @media (max-height: 620px) { .snake-modal-wrapper { zoom: 0.72; } }
     </style>
 </head>
 <body>
 
     <header>
         <img src="DKB.png" alt="Logo DKB" class="logo">
-        <h1><span id="easter-egg-trigger" title="Clique para jogar Snake II">David Kauê</span> - Portfólio 3D</h1>
+        <h1><span id="easter-egg-trigger" title="Clique para jogar">David Kauê</span> - Portfólio 3D</h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
         <div class="social-links">
             <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank">YouTube</a>
@@ -504,20 +563,24 @@
     </footer>
 
     <!-- =========================================================
-         MODAL EASTER EGG: NOKIA 3310 SNAKE II
+         MODAL EASTER EGG: DKB SNAKE
          ========================================================= -->
     <div id="snake-modal-overlay" aria-hidden="true">
         <div class="snake-modal-wrapper">
             <div class="snake-close-bar">
-                <span class="snake-badge">EASTER EGG // NOKIA 3310</span>
+                <span class="snake-badge">EASTER EGG // DAVID DUQUE</span>
                 <button id="btn-close-snake" type="button">FECHAR [ESC]</button>
             </div>
 
-            <div class="nokia-phone">
-                <div class="earpiece"></div>
+            <div class="console">
+                <div class="console-top">
+                    <span class="power-led"></span>
+                    <span class="console-brand">DKB</span>
+                    <span class="console-sub">ARCADE</span>
+                </div>
 
                 <div class="screen-bezel">
-                    <div class="brand-label">NOKIA</div>
+                    <div class="brand-label">DAVID DUQUE</div>
 
                     <div class="lcd-container">
                         <div class="lcd-hud">
@@ -533,7 +596,7 @@
 
                         <!-- Tela de Menu Inicial -->
                         <div id="screen-menu" class="lcd-overlay">
-                            <div class="lcd-title">SNAKE II</div>
+                            <div class="lcd-title">DKB SNAKE</div>
                             <div class="lcd-option selected" data-menu="0">▶ NOVO JOGO</div>
                             <div class="lcd-option" data-menu="1">VELOCIDADE: <span id="menu-level">7</span></div>
                             <div class="lcd-option" data-menu="2">LABIRINTO: <span id="menu-maze">LIVRE</span></div>
@@ -543,7 +606,7 @@
                         <!-- Tela de Pausa -->
                         <div id="screen-pause" class="lcd-overlay hidden">
                             <div class="lcd-title">PAUSA</div>
-                            <div class="lcd-sub">APERTE OK OU P<br>PARA CONTINUAR</div>
+                            <div class="lcd-sub">APERTE A OU P<br>PARA CONTINUAR</div>
                         </div>
 
                         <!-- Tela de Game Over -->
@@ -555,31 +618,41 @@
                     </div>
                 </div>
 
-                <div class="soft-keys-row">
-                    <button class="btn-soft" id="btn-action" type="button">OK / JOGAR</button>
-                    <button class="sound-toggle" id="btn-sound" type="button">SOM: ON</button>
-                    <button class="btn-soft" id="btn-pause" type="button">PAUSA</button>
-                </div>
-
-                <div class="dpad-area">
+                <div class="controls">
                     <div class="dpad-grid">
                         <div class="key-empty"></div>
-                        <button class="key-btn" data-dir="UP" id="key-up" type="button">▲<span class="sub">2</span></button>
+                        <button class="key-btn" data-dir="UP" id="key-up" type="button">▲</button>
                         <div class="key-empty"></div>
 
-                        <button class="key-btn" data-dir="LEFT" id="key-left" type="button">◄<span class="sub">4</span></button>
-                        <button class="key-btn" data-dir="DOWN" id="key-down" type="button">▼<span class="sub">5 / 8</span></button>
-                        <button class="key-btn" data-dir="RIGHT" id="key-right" type="button">►<span class="sub">6</span></button>
+                        <button class="key-btn" data-dir="LEFT" id="key-left" type="button">◄</button>
+                        <div class="key-center"></div>
+                        <button class="key-btn" data-dir="RIGHT" id="key-right" type="button">►</button>
 
                         <div class="key-empty"></div>
-                        <div class="key-empty"></div>
+                        <button class="key-btn" data-dir="DOWN" id="key-down" type="button">▼</button>
                         <div class="key-empty"></div>
                     </div>
+
+                    <div class="action-pad">
+                        <div class="action-item">
+                            <button class="btn-round secondary" id="btn-pause" type="button">B</button>
+                            <span class="action-cap">PAUSA</span>
+                        </div>
+                        <div class="action-item">
+                            <button class="btn-round" id="btn-action" type="button">A</button>
+                            <span class="action-cap">JOGAR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="console-foot">
+                    <button class="sound-toggle" id="btn-sound" type="button">SOM: ON</button>
+                    <span class="console-signature">DAVID DUQUE</span>
                 </div>
             </div>
 
             <div class="snake-controls-hint">
-                Use <b>Setas</b>, <b>WASD / ZQSD</b> ou os botões acima
+                Use <b>Setas</b>, <b>WASD / ZQSD</b>, os botões ou deslize na tela
             </div>
         </div>
     </div>
@@ -591,7 +664,7 @@
             const modalOverlay = document.getElementById('snake-modal-overlay');
             const btnCloseSnake = document.getElementById('btn-close-snake');
 
-            // Elementos do Jogo Snake II
+            // Elementos do jogo
             const canvas = document.getElementById('snake-canvas');
             const ctx = canvas.getContext('2d');
 
@@ -599,8 +672,9 @@
             const ROWS = 12;
             const CELL = 12;
 
-            const PIXEL_COLOR = '#1d2b11';
-            const BG_COLOR = '#8bac0f';
+            const rootStyle = getComputedStyle(document.documentElement);
+            const PIXEL_COLOR = rootStyle.getPropertyValue('--lcd-pixel').trim() || '#00d2ff';
+            const BG_COLOR = rootStyle.getPropertyValue('--lcd-bg').trim() || '#06141b';
 
             const hudScore = document.getElementById('hud-score');
             const hudHi = document.getElementById('hud-hi');
@@ -650,6 +724,36 @@
                         { x: 3, y: 5 }, { x: 3, y: 6 }, { x: 3, y: 7 }, { x: 3, y: 8 }, { x: 3, y: 9 },
                         { x: 10, y: 9 }, { x: 11, y: 9 }, { x: 12, y: 9 }, { x: 13, y: 9 }, { x: 14, y: 9 }, { x: 15, y: 9 }, { x: 16, y: 9 }
                     ]
+                },
+                // [NOVO] Labirinto PILARES
+                {
+                    name: 'PILARES',
+                    walls: [
+                        { x: 4, y: 2 }, { x: 5, y: 2 }, { x: 4, y: 3 }, { x: 5, y: 3 },
+                        { x: 14, y: 2 }, { x: 15, y: 2 }, { x: 14, y: 3 }, { x: 15, y: 3 },
+                        { x: 4, y: 8 }, { x: 5, y: 8 }, { x: 4, y: 9 }, { x: 5, y: 9 },
+                        { x: 14, y: 8 }, { x: 15, y: 8 }, { x: 14, y: 9 }, { x: 15, y: 9 }
+                    ]
+                },
+                // [NOVO] Labirinto DIVISA
+                {
+                    name: 'DIVISA',
+                    walls: (() => {
+                        const w = [];
+                        for (let y = 0; y <= 4; y++) w.push({ x: 10, y });
+                        for (let y = 7; y <= 11; y++) w.push({ x: 10, y });
+                        return w;
+                    })()
+                },
+                // [NOVO] Labirinto ZIGUE
+                {
+                    name: 'ZIGUE',
+                    walls: (() => {
+                        const w = [];
+                        for (let x = 0; x <= 11; x++) w.push({ x, y: 3 });
+                        for (let x = 8; x <= 19; x++) w.push({ x, y: 8 });
+                        return w;
+                    })()
                 }
             ];
 
@@ -671,9 +775,18 @@
             let bonus = null;
             let foodsEaten = 0;
             let score = 0;
-            let highScore = parseInt(localStorage.getItem('nokia_snake2_hi') || '0', 10);
+            let highScore = parseInt(localStorage.getItem('dkb_snake_hi') || '0', 10);
             let moveTimer = null;
             let soundEnabled = true;
+
+            // [NOVO] Vidas, efeito de lentidão, ranking e vibração
+            let lives = 3;
+            let slowTicks = 0;
+            const RANK_KEY = 'dkb_snake_rank';
+
+            function buzz(pattern) {
+                try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+            }
 
             const BONUS_TYPES = [
                 { icon: '🐞', type: 'bug' },
@@ -733,7 +846,7 @@
             }
 
             function updateHUD() {
-                hudScore.textContent = formatScore(score);
+                hudScore.textContent = formatScore(score) + ' ♥' + lives; // [NOVO] mostra as vidas
                 hudHi.textContent = 'HI:' + formatScore(highScore);
                 if (bonus) {
                     bonusHud.classList.add('active');
@@ -759,10 +872,16 @@
                 }
             }
 
+            // [NOVO] Velocidade progressiva: acelera até 30% conforme come
+            function currentInterval() {
+                const base = LEVEL_SPEEDS[level] || 135;
+                const boost = 1 - Math.min(foodsEaten, 30) * 0.01;
+                return Math.round(base * boost * (slowTicks > 0 ? 1.6 : 1));
+            }
+
             function startMoveLoop() {
                 stopMoveLoop();
-                const interval = LEVEL_SPEEDS[level] || 135;
-                moveTimer = setInterval(gameStep, interval);
+                moveTimer = setInterval(gameStep, currentInterval());
             }
 
             // --- Abrir / Fechar Modal Easter Egg ---
@@ -770,6 +889,7 @@
                 isModalOpen = true;
                 modalOverlay.classList.add('active');
                 modalOverlay.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('snake-open'); // [NOVO] trava a rolagem da página
                 showMenu();
             }
 
@@ -778,6 +898,7 @@
                 stopMoveLoop();
                 modalOverlay.classList.remove('active');
                 modalOverlay.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('snake-open'); // [NOVO]
             }
 
             trigger.addEventListener('click', openSnakeModal);
@@ -787,6 +908,35 @@
                     closeSnakeModal();
                 }
             });
+
+            // [NOVO] Controle por deslize (swipe) na tela LCD
+            (function setupSwipe() {
+                const lcdBox = document.querySelector('.lcd-container');
+                let start = null;
+                const MIN = 24; // distância mínima (px) para contar como deslize
+
+                lcdBox.addEventListener('touchstart', (e) => {
+                    const t = e.changedTouches[0];
+                    start = { x: t.clientX, y: t.clientY };
+                }, { passive: true });
+
+                lcdBox.addEventListener('touchmove', (e) => {
+                    if (!start || gameState !== 'PLAYING') return;
+                    const t = e.changedTouches[0];
+                    const dx = t.clientX - start.x;
+                    const dy = t.clientY - start.y;
+                    if (Math.max(Math.abs(dx), Math.abs(dy)) < MIN) return;
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        queueDirection({ x: Math.sign(dx), y: 0 });
+                    } else {
+                        queueDirection({ x: 0, y: Math.sign(dy) });
+                    }
+                    start = { x: t.clientX, y: t.clientY };
+                }, { passive: true });
+
+                lcdBox.addEventListener('touchend', () => { start = null; }, { passive: true });
+                lcdBox.addEventListener('touchcancel', () => { start = null; }, { passive: true });
+            })();
 
             function isOccupied(x, y) {
                 if (snake.some(seg => seg.x === x && seg.y === y)) return true;
@@ -808,13 +958,22 @@
                 }
             }
 
+            // [NOVO] Sorteio de bônus com pesos diferentes
+            function pickBonus() {
+                const r = Math.random();
+                if (r < 0.40) return BONUS_TYPES[0];  // 🐞 pontos normais
+                if (r < 0.70) return BONUS_TYPES[1];  // 🕷️ pontos em dobro
+                if (r < 0.90) return BONUS_TYPES[3];  // 🐢 deixa a cobra mais lenta
+                return BONUS_TYPES[2];                // 🐸 rara: +1 vida (máx. 3)
+            }
+
             function spawnBonus() {
                 let attempts = 0;
                 while (attempts < 400) {
                     const rx = Math.floor(Math.random() * COLS);
                     const ry = Math.floor(Math.random() * ROWS);
                     if (!isOccupied(rx, ry) && !(food.x === rx && food.y === ry)) {
-                        const chosen = BONUS_TYPES[Math.floor(Math.random() * BONUS_TYPES.length)];
+                        const chosen = pickBonus(); // [NOVO]
                         bonus = {
                             x: rx,
                             y: ry,
@@ -843,6 +1002,8 @@
                 score = 0;
                 foodsEaten = 0;
                 bonus = null;
+                lives = 3;      // [NOVO]
+                slowTicks = 0;  // [NOVO]
 
                 spawnFood();
                 updateHUD();
@@ -861,6 +1022,7 @@
                 stopMoveLoop();
                 gameState = 'MENU';
                 bonus = null;
+                lives = 3; // [NOVO]
                 updateHUD();
                 updateMenuUI();
                 screenMenu.classList.remove('hidden');
@@ -883,19 +1045,75 @@
                 }
             }
 
-            function triggerGameOver() {
+            // [NOVO] Ranking local (top 5 guardado no navegador)
+            function loadRank() {
+                try { return JSON.parse(localStorage.getItem(RANK_KEY) || '[]'); }
+                catch (e) { return []; }
+            }
+
+            function saveRank(s) {
+                if (s <= 0) return;
+                const r = loadRank();
+                r.push({ s: s, m: MAZES[mazeIndex].name, l: level });
+                r.sort((a, b) => b.s - a.s);
+                try { localStorage.setItem(RANK_KEY, JSON.stringify(r.slice(0, 5))); }
+                catch (e) {}
+            }
+
+            function rankHTML() {
+                const r = loadRank().slice(0, 3);
+                if (!r.length) return '---';
+                return r.map((e, i) => `${i + 1}. ${formatScore(e.s)} ${e.m}`).join('<br>');
+            }
+
+            // [NOVO] Fim de jogo de verdade (antiga triggerGameOver)
+            function finishGame() {
                 stopMoveLoop();
                 gameState = 'GAMEOVER';
                 sfx.die();
 
                 if (score > highScore) {
                     highScore = score;
-                    localStorage.setItem('nokia_snake2_hi', highScore);
+                    localStorage.setItem('dkb_snake_hi', highScore);
                 }
+                saveRank(score);
                 updateHUD();
 
-                gameoverStats.innerHTML = `PONTOS: ${formatScore(score)}<br>RECORDE: ${formatScore(highScore)}`;
+                gameoverStats.innerHTML =
+                    `PONTOS: ${formatScore(score)}<br>RECORDE: ${formatScore(highScore)}` +
+                    `<br><br>TOP 3<br>${rankHTML()}`;
                 screenGameover.classList.remove('hidden');
+            }
+
+            // [NOVO] Perde uma vida; só termina o jogo quando as vidas acabam
+            function triggerGameOver() {
+                stopMoveLoop();
+                lives--;
+                if (lives <= 0) {
+                    lives = 0;
+                    finishGame();
+                    return;
+                }
+                sfx.die();
+                buzz([60, 40, 60]);
+                snake = [
+                    { x: 6, y: 6, full: false },
+                    { x: 5, y: 6, full: false },
+                    { x: 4, y: 6, full: false },
+                    { x: 3, y: 6, full: false }
+                ];
+                dir = { x: 1, y: 0 };
+                inputQueue = [];
+                slowTicks = 0;
+                gameState = 'DYING';
+                updateHUD();
+                draw();
+                setTimeout(() => {
+                    if (gameState === 'DYING' && isModalOpen) {
+                        gameState = 'PLAYING';
+                        startMoveLoop();
+                    }
+                }, 800);
             }
 
             function queueDirection(newDir) {
@@ -948,7 +1166,9 @@
                     score += level;
                     foodsEaten++;
                     sfx.eat();
+                    buzz(10); // [NOVO]
                     spawnFood();
+                    if (foodsEaten % 5 === 0) startMoveLoop(); // [NOVO] acelera a cada 5 comidas
                     if (foodsEaten % 5 === 0 && !bonus) {
                         spawnBonus();
                     }
@@ -957,11 +1177,16 @@
                     sfx.move();
                 }
 
+                // [NOVO] Cada bônus tem um efeito diferente
                 if (ateBonus) {
-                    const bonusPoints = bonus.ticks * 4 + (level * 5);
-                    score += bonusPoints;
+                    let pts = bonus.ticks * 4 + (level * 5);
+                    if (bonus.type === 'spider') pts *= 2;
+                    if (bonus.type === 'frog' && lives < 3) lives++;
+                    if (bonus.type === 'turtle') { slowTicks = 25; startMoveLoop(); }
+                    score += pts;
                     bonus = null;
                     sfx.bonus();
+                    buzz(20);
                 }
 
                 if (bonus) {
@@ -971,9 +1196,15 @@
                     }
                 }
 
+                // [NOVO] Fim do efeito de lentidão
+                if (slowTicks > 0) {
+                    slowTicks--;
+                    if (slowTicks === 0) startMoveLoop();
+                }
+
                 if (score > highScore) {
                     highScore = score;
-                    localStorage.setItem('nokia_snake2_hi', highScore);
+                    localStorage.setItem('dkb_snake_hi', highScore);
                 }
 
                 updateHUD();
