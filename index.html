@@ -478,6 +478,144 @@
         body.snake-open { overflow: hidden; }
         @media (max-height: 720px) { .snake-modal-wrapper { zoom: 0.85; } }
         @media (max-height: 620px) { .snake-modal-wrapper { zoom: 0.72; } }
+
+        /* Barra de progresso da fase */
+        .lcd-phase {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--lcd-pixel);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px rgba(0, 210, 255, 0.55);
+        }
+        .phase-track {
+            flex: 1;
+            height: 7px;
+            border: 1px solid var(--lcd-pixel);
+            padding: 1px;
+        }
+        #phase-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--lcd-pixel);
+            transition: width 0.25s ease-out;
+        }
+
+        /* ---- v3: layout com placar, abertura, estados ---- */
+        #snake-modal-overlay { align-items: flex-start; }
+        .snake-modal-wrapper { margin: auto; }
+        .snake-layout { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 18px; width: 100%; }
+        .snake-main { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; }
+
+        .blink { animation: blinkTxt 1s steps(1) infinite; }
+        @keyframes blinkTxt { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+        .lcd-input {
+            width: 92%;
+            background: transparent;
+            border: 2px solid var(--lcd-pixel);
+            color: var(--lcd-pixel);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            padding: 7px 4px;
+            margin-bottom: 4px;
+            outline: none;
+        }
+        .lcd-input::placeholder { color: rgba(0, 210, 255, 0.35); }
+
+        .scoreboard {
+            flex: 0 1 250px;
+            width: 100%;
+            max-width: 340px;
+            background: linear-gradient(160deg, #1b1e29 0%, #0f1117 100%);
+            border: 2px solid #0a0b10;
+            border-radius: 16px;
+            padding: 14px 14px 10px;
+            box-shadow: 0 22px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 210, 255, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+        }
+        .scoreboard, .scoreboard * { font-family: 'Press Start 2P', monospace; }
+        .sb-title { color: var(--accent); font-size: 11px; letter-spacing: 2px; text-shadow: 0 0 8px rgba(0, 210, 255, 0.5); }
+        .sb-sub { color: #4a5266; font-size: 6px; letter-spacing: 2px; margin: 6px 0 10px; }
+        #board-list { list-style: none; }
+        #board-list li {
+            display: grid;
+            grid-template-columns: 24px 1fr auto auto;
+            gap: 6px;
+            align-items: center;
+            font-size: 8px;
+            padding: 7px 4px;
+            color: #9fb3c8;
+            border-bottom: 1px dashed rgba(0, 210, 255, 0.16);
+        }
+        #board-list li:first-child { color: var(--accent); }
+        #board-list li.mine { background: rgba(0, 210, 255, 0.14); }
+        .sb-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .sb-phase { color: #6f768a; font-size: 6px; }
+        .sb-empty { font-size: 7px; color: #6f768a; padding: 10px 0; line-height: 1.8; }
+
+        .logo-intro {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: radial-gradient(circle at 50% 40%, #0c1c26 0%, #05090d 75%);
+            transition: opacity 0.35s ease-out;
+            cursor: pointer;
+        }
+        .logo-intro::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+        }
+        .logo-intro.hidden { display: none; }
+        .logo-intro.fade-out { opacity: 0; }
+        #intro-canvas {
+            width: min(84vw, 420px);
+            height: auto;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.7));
+        }
+        .intro-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--accent);
+            white-space: pre;
+            min-height: 16px;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+        }
+        .intro-skip {
+            position: absolute;
+            bottom: 22px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: #4a5266;
+            animation: blinkTxt 1.4s steps(1) infinite;
+        }
+        #snake-modal-overlay.intro-on .snake-modal-wrapper { visibility: hidden; }
+        .snake-modal-wrapper.power-on { animation: powerOn 0.6s ease-out; }
+        @keyframes powerOn {
+            from { opacity: 0; transform: scale(0.95); filter: brightness(2.4); }
+            to { opacity: 1; transform: none; filter: none; }
+        }
+
+        /* Telas de aviso dentro do jogo (fase / pronto): quase transparentes para ver a cobra e os obstáculos */
+        .lcd-overlay.soft { background: rgba(6, 20, 27, 0.22); }
+        .lcd-overlay.soft .lcd-title,
+        .lcd-overlay.soft .lcd-sub {
+            text-shadow: 0 0 3px #031016, 0 0 6px #031016, 1px 1px 0 #031016, -1px -1px 0 #031016, 1px -1px 0 #031016, -1px 1px 0 #031016;
+        }
     </style>
 </head>
 <body>
@@ -566,7 +704,17 @@
          MODAL EASTER EGG: DKB SNAKE
          ========================================================= -->
     <div id="snake-modal-overlay" aria-hidden="true">
+
+        <!-- Abertura: logo em pixel -->
+        <div id="logo-intro" class="logo-intro hidden">
+            <canvas id="intro-canvas" width="280" height="140"></canvas>
+            <div id="intro-text" class="intro-text"></div>
+            <div class="intro-skip">APERTE PARA PULAR</div>
+        </div>
+
         <div class="snake-modal-wrapper">
+          <div class="snake-layout">
+            <div class="snake-main">
             <div class="snake-close-bar">
                 <span class="snake-badge">EASTER EGG // DAVID DUQUE</span>
                 <button id="btn-close-snake" type="button">FECHAR [ESC]</button>
@@ -592,21 +740,36 @@
                             <span id="hud-hi">HI:0000</span>
                         </div>
 
+                        <div class="lcd-phase">
+                            <span id="phase-label">FASE 1</span>
+                            <div class="phase-track"><div id="phase-fill"></div></div>
+                        </div>
+
                         <canvas id="snake-canvas" width="240" height="144"></canvas>
 
                         <!-- Tela de Menu Inicial -->
                         <div id="screen-menu" class="lcd-overlay">
                             <div class="lcd-title">DKB SNAKE</div>
-                            <div class="lcd-option selected" data-menu="0">▶ NOVO JOGO</div>
-                            <div class="lcd-option" data-menu="1">VELOCIDADE: <span id="menu-level">7</span></div>
-                            <div class="lcd-option" data-menu="2">LABIRINTO: <span id="menu-maze">LIVRE</span></div>
+                            <div class="lcd-option" id="menu-continue" data-action="continue" style="display:none">CONTINUAR JOGO</div>
+                            <div class="lcd-option selected" data-action="new">NOVO JOGO</div>
+                            <div class="lcd-option" data-action="level">VELOCIDADE: <span id="menu-level">7</span></div>
+                            <div class="lcd-option" data-action="stage">MODO: <span id="menu-maze">DESAFIO</span></div>
                             <button id="btn-direct-play" class="lcd-start-btn" type="button">▶ JOGAR AGORA</button>
                         </div>
 
                         <!-- Tela de Pausa -->
                         <div id="screen-pause" class="lcd-overlay hidden">
                             <div class="lcd-title">PAUSA</div>
-                            <div class="lcd-sub">APERTE A OU P<br>PARA CONTINUAR</div>
+                            <div class="lcd-sub" id="pause-info">FASE 1 &nbsp;0000</div>
+                            <div class="lcd-option selected" data-pause="0">CONTINUAR</div>
+                            <div class="lcd-option" data-pause="1">REINICIAR</div>
+                            <div class="lcd-option" data-pause="2">VOLTAR AO MENU</div>
+                        </div>
+
+                        <!-- Tela de Passagem de Fase -->
+                        <div id="screen-phase" class="lcd-overlay soft hidden">
+                            <div class="lcd-title" id="phase-title">FASE 2</div>
+                            <div class="lcd-sub" id="phase-info"></div>
                         </div>
 
                         <!-- Tela de Game Over -->
@@ -614,6 +777,20 @@
                             <div class="lcd-title">FIM DE JOGO</div>
                             <div class="lcd-sub" id="gameover-stats">PONTOS: 0000</div>
                             <button id="btn-restart" class="lcd-start-btn" type="button">JOGAR DE NOVO</button>
+                        </div>
+
+                        <!-- Tela de Aguardar Tecla -->
+                        <div id="screen-ready" class="lcd-overlay soft hidden">
+                            <div class="lcd-title">PRONTO!</div>
+                            <div class="lcd-sub blink">APERTE QUALQUER<br>TECLA</div>
+                        </div>
+
+                        <!-- Tela de Nome no Placar -->
+                        <div id="screen-name" class="lcd-overlay hidden">
+                            <div class="lcd-title" id="name-title">TOP 10!</div>
+                            <div class="lcd-sub">ESCREVA SEU NOME</div>
+                            <input id="name-input" class="lcd-input" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="NOME">
+                            <button id="btn-name-save" class="lcd-start-btn" type="button">SALVAR</button>
                         </div>
                     </div>
                 </div>
@@ -652,8 +829,17 @@
             </div>
 
             <div class="snake-controls-hint">
-                Use <b>Setas</b>, <b>WASD / ZQSD</b>, os botões ou deslize na tela
+                <b>Setas</b> / <b>WASD</b> / botões / deslize &middot; <b>Espaço</b> confirma e pausa
             </div>
+            </div>
+
+            <!-- Placar -->
+            <aside class="scoreboard" id="scoreboard" aria-label="Placar">
+                <div class="sb-title">PLACAR</div>
+                <div class="sb-sub">TOP 10 &middot; DKB SNAKE</div>
+                <ol id="board-list"></ol>
+            </aside>
+          </div>
         </div>
     </div>
 
@@ -688,7 +874,22 @@
             const gameoverStats = document.getElementById('gameover-stats');
             const menuMazeLabel = document.getElementById('menu-maze');
             const menuLevelLabel = document.getElementById('menu-level');
-            const menuOptions = document.querySelectorAll('.lcd-option');
+            const menuOptions = document.querySelectorAll('#screen-menu .lcd-option');
+            const pauseOptions = document.querySelectorAll('#screen-pause .lcd-option');
+            const pauseInfo = document.getElementById('pause-info');
+            const screenPhase = document.getElementById('screen-phase');
+            const phaseTitle = document.getElementById('phase-title');
+            const phaseInfo = document.getElementById('phase-info');
+            const phaseLabel = document.getElementById('phase-label');
+            const phaseFill = document.getElementById('phase-fill');
+            const screenReady = document.getElementById('screen-ready');
+            const screenName = document.getElementById('screen-name');
+            const nameTitle = document.getElementById('name-title');
+            const nameInput = document.getElementById('name-input');
+            const menuContinue = document.getElementById('menu-continue');
+            const phaseTrack = document.querySelector('.phase-track');
+            const boardList = document.getElementById('board-list');
+            const DIR_KEYS = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd', 'z', 'q'];
 
             const MAZES = [
                 { name: 'LIVRE', walls: [] },
@@ -757,6 +958,30 @@
                 }
             ];
 
+            // =====================================================================
+            //  MODOS DE JOGO (aparecem no menu, na ordem abaixo)
+            //   LIVRE    -> campo sem paredes, sem fases (só a velocidade sobe)
+            //   DESAFIO  -> começa no LIVRE, passa pelos 6 labirintos e depois
+            //               pelas 6 fases de blocos soltos (a última não acaba)
+            //   CAIXA, TUNEL, ESPIRAL, PILARES, DIVISA, ZIGUE -> só aquele labirinto
+            //  "maze" = posição na lista MAZES (0 livre, 1 caixa, 2 túnel, 3 espiral,
+            //  4 pilares, 5 divisa, 6 zigue). "blocks" = blocos soltos no campo.
+            // =====================================================================
+            const CHALLENGE_STAGES = [];
+            [0, 1, 2, 3, 4, 5, 6].forEach(m => CHALLENGE_STAGES.push({ name: MAZES[m].name, maze: m, blocks: 0 }));
+            for (let b = 1; b <= 6; b++) CHALLENGE_STAGES.push({ name: 'BLOCOS ' + b, maze: 0, blocks: b * 2, final: b === 6 });
+
+            const SINGLE_TAGS = ['LIV', 'DES', 'CXA', 'TUN', 'ESP', 'PIL', 'DIV', 'ZIG'];
+            const MODES = [
+                { name: 'LIVRE', tag: SINGLE_TAGS[0], stages: [{ name: 'LIVRE', maze: 0, blocks: 0, final: true }] },
+                { name: 'DESAFIO', tag: SINGLE_TAGS[1], campaign: true, stages: CHALLENGE_STAGES }
+            ];
+            [1, 2, 3, 4, 5, 6].forEach(m => MODES.push({
+                name: MAZES[m].name,
+                tag: SINGLE_TAGS[m + 1],
+                stages: [{ name: MAZES[m].name, maze: m, blocks: 0, final: true }]
+            }));
+
             const LEVEL_SPEEDS = {
                 1: 320, 2: 280, 3: 245, 4: 215, 5: 185,
                 6: 160, 7: 135, 8: 110, 9: 85
@@ -784,16 +1009,94 @@
             let slowTicks = 0;
             const RANK_KEY = 'dkb_snake_rank';
 
+            // =====================================================================
+            //  CONFIGURAÇÕES DO JOGO (1/2): FASES E DIFICULDADE
+            // =====================================================================
+            const PHASE_GOAL_MULT = 2;         // dobro de pontos para passar de fase
+            const PHASE_GOAL_BASE = 12;        // meta = velocidade x MULT x (BASE + STEP x fase)
+            const PHASE_GOAL_STEP = 3;
+            const PHASE_SPEEDUP = 0.96;        // cada fase deixa a cobra ~4% mais rápida
+            const MIN_INTERVAL = 55;           // limite de velocidade (ms por passo)
+            const MAX_LIVES = 5;
+            const BOARD_KEY = 'dkb_snake_board';
+            const BOARD_SIZE = 10;
+            let phase = 1;
+            let phaseStartScore = 0;
+            let extraWalls = [];
+            let pauseIndex = 0;
+            let menuMode = 1;                  // modo escolhido no menu (1 = DESAFIO)
+            let currentMode = MODES[1];        // modo da partida em andamento
+            let stageList = currentMode.stages;
+            let suspended = false;
+            let suspendedLevel = 7;
+            let readyLockUntil = 0;
+            let nameEntryOpen = false;
+            let board = [];
+            let lastEntry = null;
+
             function buzz(pattern) {
                 try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
             }
 
-            const BONUS_TYPES = [
-                { icon: '🐞', type: 'bug' },
-                { icon: '🕷️', type: 'spider' },
-                { icon: '🐸', type: 'frog' },
-                { icon: '🐢', type: 'turtle' }
+            // =====================================================================
+            //  CONFIGURAÇÕES DO JOGO (2/2): ITENS ESPECIAIS E CÓDIGOS SECRETOS
+            //
+            //  COMO USAR OS CÓDIGOS: durante a partida, digite os números do
+            //  teclado em sequência (ex.: 1 1 1). O item aparece na hora no campo
+            //  e FICA lá até a cobra comê-lo (não some com o tempo).
+            //  Para trocar um código, mude o valor de "code" na tabela abaixo.
+            //  Regras: só números (as letras são usadas nos controles) e nenhum
+            //  código pode terminar com outro código (ex.: não use "11" e "111").
+            //  Os códigos não funcionam no menu nem no celular (precisa de teclado).
+            // =====================================================================
+
+            // Itens que aparecem sozinhos: duração em "passos" da cobra
+            // duração = maior entre BONUS_TICKS_MIN e (BONUS_TICKS_BASE - fase x BONUS_TICKS_PER_PHASE)
+            const BONUS_TICKS_BASE = 46;
+            const BONUS_TICKS_MIN = 24;
+            const BONUS_TICKS_PER_PHASE = 2;
+
+            const SLOW_STEPS = 25;                  // quantos passos a cobra fica lenta (item 🐢)
+            const SHRINK_AMOUNT = 4;                // quantos segmentos o item ✂️ remove
+            const SNAKE_MIN_LENGTH = 4;             // a cobra nunca fica menor que isso
+            const CODE_TIMEOUT_MS = 2000;           // tempo máximo entre uma tecla e outra do código
+            const SECRET_ITEM_GIVES_POINTS = false; // item criado por código dá pontos? (false = só o efeito)
+
+            // TABELA DOS ITENS ESPECIAIS
+            //  type       -> nome interno (não mude)
+            //  icon       -> figura mostrada no painel (HUD)
+            //  code       -> CÓDIGO SECRETO que faz o item aparecer na hora
+            //  weight     -> chance de aparecer sozinho (quanto maior, mais comum)
+            //  pointsMult -> multiplicador dos pontos ao comer (2 = dobro)
+            //  desc       -> o que o item faz
+            //  effect     -> função executada quando a cobra come o item (opcional)
+            const BONUS_ITEMS = [
+                { type: 'frog',   icon: '🐸', code: '111', weight: 15, pointsMult: 1,
+                  desc: '+1 vida (limite: MAX_LIVES)',
+                  effect: () => { if (lives < MAX_LIVES) lives++; } },
+                { type: 'shrink', icon: '✂️', code: '222', weight: 20, pointsMult: 1,
+                  desc: 'Diminui a cobra (SHRINK_AMOUNT segmentos, mínimo SNAKE_MIN_LENGTH)',
+                  effect: () => {
+                      const cut = Math.min(SHRINK_AMOUNT, snake.length - SNAKE_MIN_LENGTH);
+                      if (cut > 0) snake.splice(snake.length - cut, cut);
+                  } },
+                { type: 'spider', icon: '🕷️', code: '333', weight: 22, pointsMult: 2,
+                  desc: 'Pontos em dobro' },
+                { type: 'turtle', icon: '🐢', code: '444', weight: 15, pointsMult: 1,
+                  desc: 'Deixa a cobra mais lenta por SLOW_STEPS passos',
+                  effect: () => { slowTicks = SLOW_STEPS; startMoveLoop(); } },
+                { type: 'bug',    icon: '🐞', code: '555', weight: 28, pointsMult: 1,
+                  desc: 'Pontos normais' }
             ];
+
+            // Mapa código -> item (montado a partir da tabela acima; não precisa mexer)
+            const SECRET_CODES = {};
+            BONUS_ITEMS.forEach(it => {
+                if (SECRET_CODES[it.code]) console.warn('Código repetido na tabela BONUS_ITEMS:', it.code);
+                SECRET_CODES[it.code] = it;
+            });
+            let codeBuffer = '';
+            let codeLastTime = 0;
 
             // --- Áudio 8-bit ---
             let audioCtx = null;
@@ -834,6 +1137,19 @@
                     playTone(1046.50, 0.10, 'square', 0.15);
                 },
                 menu: () => playTone(440, 0.04, 'square'),
+                boot: () => {
+                    playTone(261.63, 0.08, 'square', 0);
+                    playTone(329.63, 0.08, 'square', 0.09);
+                    playTone(392.00, 0.08, 'square', 0.18);
+                    playTone(523.25, 0.18, 'square', 0.27);
+                },
+                phase: () => {
+                    playTone(523.25, 0.07, 'square', 0);
+                    playTone(659.25, 0.07, 'square', 0.08);
+                    playTone(783.99, 0.07, 'square', 0.16);
+                    playTone(1046.50, 0.07, 'square', 0.24);
+                    playTone(1318.51, 0.16, 'square', 0.32);
+                },
                 die: () => {
                     playTone(300, 0.10, 'sawtooth', 0);
                     playTone(220, 0.12, 'sawtooth', 0.10);
@@ -848,20 +1164,27 @@
             function updateHUD() {
                 hudScore.textContent = formatScore(score) + ' ♥' + lives; // [NOVO] mostra as vidas
                 hudHi.textContent = 'HI:' + formatScore(highScore);
+                const stNow = stageList[phase - 1] || stageList[0];
+                phaseLabel.textContent = currentMode.campaign ? ('F' + phase + ' ' + stNow.name) : ('MODO ' + currentMode.name);
+                phaseTrack.style.visibility = currentMode.campaign ? 'visible' : 'hidden';
+                const pct = stNow.final ? 100 : Math.max(0, Math.min(100, ((score - phaseStartScore) / phaseGoal()) * 100));
+                phaseFill.style.width = pct + '%';
                 if (bonus) {
                     bonusHud.classList.add('active');
                     bonusIconEl.textContent = bonus.icon;
-                    bonusTimerEl.textContent = String(bonus.ticks).padStart(2, '0');
+                    bonusTimerEl.textContent = bonus.perm ? '--' : String(bonus.ticks).padStart(2, '0');
                 } else {
                     bonusHud.classList.remove('active');
                 }
             }
 
             function updateMenuUI() {
-                menuOptions.forEach((opt, idx) => {
-                    opt.classList.toggle('selected', idx === menuIndex);
-                });
-                menuMazeLabel.textContent = MAZES[mazeIndex].name;
+                menuContinue.style.display = suspended ? '' : 'none';
+                const items = menuItems();
+                if (menuIndex >= items.length) menuIndex = 0;
+                menuOptions.forEach(o => o.classList.remove('selected'));
+                if (items[menuIndex]) items[menuIndex].classList.add('selected');
+                menuMazeLabel.textContent = MODES[menuMode].name;
                 menuLevelLabel.textContent = level;
             }
 
@@ -876,13 +1199,311 @@
             function currentInterval() {
                 const base = LEVEL_SPEEDS[level] || 135;
                 const boost = 1 - Math.min(foodsEaten, 30) * 0.01;
-                return Math.round(base * boost * (slowTicks > 0 ? 1.6 : 1));
+                const phaseMul = Math.pow(PHASE_SPEEDUP, phase - 1);
+                return Math.max(MIN_INTERVAL, Math.round(base * boost * phaseMul * (slowTicks > 0 ? 1.6 : 1)));
             }
 
             function startMoveLoop() {
                 stopMoveLoop();
                 moveTimer = setInterval(gameStep, currentInterval());
             }
+
+            // --- Estados: aguardar tecla, continuar jogo, fases ---
+            function enterReady() {
+                gameState = 'READY';
+                readyLockUntil = Date.now() + 350;
+                screenReady.classList.remove('hidden');
+            }
+
+            // Qualquer tecla ou toque inicia (ou retoma após pausa / passar de fase)
+            function beginPlay() {
+                if (gameState !== 'READY' && gameState !== 'PHASE') return false;
+                if (Date.now() < readyLockUntil) return false;
+                screenReady.classList.add('hidden');
+                screenPhase.classList.add('hidden');
+                gameState = 'PLAYING';
+                startMoveLoop();
+                return true;
+            }
+
+            // Texto do modo/fase atual (pausa e fim de jogo)
+            function stageLabel() {
+                return currentMode.campaign ? ('FASE ' + phase + ' ' + stageList[phase - 1].name) : ('MODO ' + currentMode.name);
+            }
+
+            // Etiqueta mostrada no placar: F3 (fase do desafio) ou sigla do modo
+            function boardTag() {
+                return currentMode.campaign ? ('F' + phase) : currentMode.tag;
+            }
+
+            // Códigos secretos: acompanha os números digitados em sequência
+            function trackSecretCode(key) {
+                if (['shift', 'control', 'alt', 'meta'].includes(key)) return;
+                if (!/^[0-9]$/.test(key)) { codeBuffer = ''; return; }
+                const now = Date.now();
+                if (now - codeLastTime > CODE_TIMEOUT_MS) codeBuffer = '';
+                codeLastTime = now;
+                codeBuffer = (codeBuffer + key).slice(-8);
+                for (const code in SECRET_CODES) {
+                    if (codeBuffer.endsWith(code)) {
+                        codeBuffer = '';
+                        if (spawnBonus(SECRET_CODES[code])) {
+                            draw();
+                            sfx.bonus();
+                            buzz(15);
+                        }
+                        return;
+                    }
+                }
+            }
+
+            function resetSnake() {
+                snake = [
+                    { x: 6, y: 6, full: false },
+                    { x: 5, y: 6, full: false },
+                    { x: 4, y: 6, full: false },
+                    { x: 3, y: 6, full: false }
+                ];
+                dir = { x: 1, y: 0 };
+                inputQueue = [];
+            }
+
+            // Aplica o labirinto e os blocos soltos da fase atual
+            function applyStage() {
+                const st = stageList[phase - 1];
+                mazeIndex = st.maze;
+                if (st.blocks === 0) {
+                    extraWalls = [];
+                } else {
+                    if (extraWalls.length > st.blocks) extraWalls = extraWalls.slice(0, st.blocks);
+                    const need = st.blocks - extraWalls.length;
+                    if (need > 0) addPhaseWalls(need);
+                }
+            }
+
+            // --- Menu (itens visíveis: continuar, novo jogo, velocidade, fase) ---
+            function menuItems() {
+                return Array.from(menuOptions).filter(o => o.style.display !== 'none');
+            }
+            function menuAction() {
+                const items = menuItems();
+                return items[menuIndex] ? items[menuIndex].dataset.action : 'new';
+            }
+            function menuMove(d) {
+                const n = menuItems().length;
+                menuIndex = (menuIndex + d + n) % n;
+                sfx.menu();
+                updateMenuUI();
+            }
+            function menuAdjust(action, delta) {
+                if (action === 'level') level = ((level - 1 + delta + 9) % 9) + 1;
+                else if (action === 'stage') {
+                    menuMode = (menuMode + delta + MODES.length) % MODES.length;
+                    if (!suspended) {
+                        currentMode = MODES[menuMode];
+                        stageList = currentMode.stages;
+                        updateHUD();
+                    }
+                }
+                else return;
+                sfx.menu();
+                updateMenuUI();
+                draw();
+            }
+            function menuActivate(action) {
+                if (action === 'continue') resumeSuspended();
+                else if (action === 'new') startGame();
+                else menuAdjust(action, 1);
+            }
+            function suspendToMenu() {
+                suspended = true;
+                suspendedLevel = level;
+                showMenu(true);
+            }
+            function resumeSuspended() {
+                if (!suspended) return;
+                suspended = false;
+                level = suspendedLevel;
+                screenMenu.classList.add('hidden');
+                sfx.menu();
+                updateHUD();
+                draw();
+                enterReady();
+            }
+
+            // --- Abertura: logo em pixel ---
+            const introEl = document.getElementById('logo-intro');
+            const introCanvas = document.getElementById('intro-canvas');
+            const introCtx = introCanvas.getContext('2d');
+            const introText = document.getElementById('intro-text');
+            const INTRO_CELL = 4;
+            const INTRO_COLS = introCanvas.width / INTRO_CELL;
+            const INTRO_ROWS = introCanvas.height / INTRO_CELL;
+            const INTRO_TOTAL = 3.6;
+            let introActive = false;
+            let introRaf = null;
+            let introStart = 0;
+            let introCells = [];
+            let introBeeped = false;
+            let introHideTimer = null;
+            let logoReady = false;
+            const logoImg = new Image();
+            logoImg.onload = () => { logoReady = true; };
+            logoImg.src = 'DKB.png';
+
+            const DKB_GLYPHS = {
+                D: ['11110', '10001', '10001', '10001', '10001', '10001', '11110'],
+                K: ['10001', '10010', '10100', '11000', '10100', '10010', '10001'],
+                B: ['11110', '10001', '10001', '11110', '10001', '10001', '11110']
+            };
+
+            // Plano B: "DKB" em pixel art (usado se o DKB.png não carregar)
+            function fallbackLogoCells() {
+                const cells = [];
+                const S = 3, gap = 4, word = 'DKB';
+                const totalW = word.length * 5 * S + (word.length - 1) * gap;
+                const ox = Math.floor((INTRO_COLS - totalW) / 2);
+                const oy = Math.floor((INTRO_ROWS - 7 * S) / 2);
+                for (let i = 0; i < word.length; i++) {
+                    const g = DKB_GLYPHS[word[i]];
+                    for (let r = 0; r < 7; r++) {
+                        for (let c = 0; c < 5; c++) {
+                            if (g[r][c] !== '1') continue;
+                            for (let sy = 0; sy < S; sy++) {
+                                for (let sx = 0; sx < S; sx++) {
+                                    cells.push({ x: ox + i * (5 * S + gap) + c * S + sx, y: oy + r * S + sy });
+                                }
+                            }
+                        }
+                    }
+                }
+                return cells;
+            }
+
+            // Logo real (DKB.png) convertida em pixels; devolve null se não for possível
+            function realLogoCells() {
+                if (!logoReady || !logoImg.naturalWidth) return null;
+                try {
+                    const maxW = 60, maxH = 28;
+                    const sc = Math.min(maxW / logoImg.naturalWidth, maxH / logoImg.naturalHeight);
+                    const gw = Math.max(1, Math.round(logoImg.naturalWidth * sc));
+                    const gh = Math.max(1, Math.round(logoImg.naturalHeight * sc));
+                    const off = document.createElement('canvas');
+                    off.width = gw;
+                    off.height = gh;
+                    const octx = off.getContext('2d');
+                    octx.drawImage(logoImg, 0, 0, gw, gh);
+                    const data = octx.getImageData(0, 0, gw, gh).data;
+                    const px = (x, y) => {
+                        const i = (y * gw + x) * 4;
+                        return [data[i], data[i + 1], data[i + 2], data[i + 3]];
+                    };
+                    const corners = [px(0, 0), px(gw - 1, 0), px(0, gh - 1), px(gw - 1, gh - 1)];
+                    const opaqueBg = corners.every(c => c[3] > 200);
+                    const bg = [0, 1, 2].map(k => corners.reduce((a, c) => a + c[k], 0) / 4);
+                    const ox = Math.floor((INTRO_COLS - gw) / 2);
+                    const oy = Math.floor((INTRO_ROWS - gh) / 2);
+                    const cells = [];
+                    for (let y = 0; y < gh; y++) {
+                        for (let x = 0; x < gw; x++) {
+                            const p = px(x, y);
+                            const on = opaqueBg
+                                ? (Math.abs(p[0] - bg[0]) + Math.abs(p[1] - bg[1]) + Math.abs(p[2] - bg[2])) > 90
+                                : p[3] > 110;
+                            if (on) cells.push({ x: ox + x, y: oy + y });
+                        }
+                    }
+                    return cells.length > 20 ? cells : null;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function buildIntro() {
+                const base = realLogoCells() || fallbackLogoCells();
+                introCells = base.map(c => ({
+                    tx: c.x,
+                    ty: c.y,
+                    sx: c.x + (Math.random() - 0.5) * 120,
+                    sy: c.y + (Math.random() < 0.5 ? -1 : 1) * (20 + Math.random() * 40),
+                    delay: Math.random() * 0.7
+                }));
+            }
+
+            function introFrame(now) {
+                if (!introActive) return;
+                const t = (now - introStart) / 1000;
+                const W = introCanvas.width, H = introCanvas.height;
+                introCtx.clearRect(0, 0, W, H);
+                const barX = ((t - 1.7) / 0.6) * (INTRO_COLS + 8) - 4;
+                const glitching = t > 2.45 && t < 2.6;
+                for (const c of introCells) {
+                    const k = Math.min(1, Math.max(0, (t - c.delay) / 0.9));
+                    if (k <= 0) continue;
+                    const e = 1 - Math.pow(1 - k, 3);
+                    const x = c.sx + (c.tx - c.sx) * e;
+                    const y = c.sy + (c.ty - c.sy) * e;
+                    const shift = (glitching && c.ty % 5 === 0) ? ((c.ty * 7) % 5) - 2 : 0;
+                    introCtx.globalAlpha = Math.min(1, k * 1.6);
+                    introCtx.fillStyle = (k >= 1 && Math.abs(c.tx - barX) < 2.5) ? '#e8fbff' : PIXEL_COLOR;
+                    introCtx.fillRect(Math.round((x + shift) * INTRO_CELL), Math.round(y * INTRO_CELL), INTRO_CELL - 1, INTRO_CELL - 1);
+                }
+                introCtx.globalAlpha = 1;
+                const full = 'DAVID DUQUE';
+                const typed = Math.max(0, Math.min(full.length, Math.floor((t - 2.0) / 0.07)));
+                introText.textContent = full.slice(0, typed) + ((t > 2.0 && Math.floor(t * 4) % 2 === 0) ? '_' : ' ');
+                if (!introBeeped && t > 0.95) {
+                    introBeeped = true;
+                    sfx.boot();
+                }
+                if (t >= INTRO_TOTAL) {
+                    endIntro();
+                    return;
+                }
+                introRaf = requestAnimationFrame(introFrame);
+            }
+
+            function startIntro() {
+                clearTimeout(introHideTimer);
+                buildIntro();
+                introActive = true;
+                introBeeped = false;
+                modalOverlay.classList.add('intro-on');
+                introEl.classList.remove('fade-out');
+                introEl.classList.remove('hidden');
+                introStart = performance.now();
+                introRaf = requestAnimationFrame(introFrame);
+            }
+
+            function endIntro() {
+                if (!introActive) return;
+                introActive = false;
+                if (introRaf) cancelAnimationFrame(introRaf);
+                introRaf = null;
+                introEl.classList.add('fade-out');
+                modalOverlay.classList.remove('intro-on');
+                const wrap = document.querySelector('.snake-modal-wrapper');
+                wrap.classList.add('power-on');
+                setTimeout(() => wrap.classList.remove('power-on'), 700);
+                introHideTimer = setTimeout(() => {
+                    introEl.classList.add('hidden');
+                    introEl.classList.remove('fade-out');
+                }, 350);
+            }
+
+            function skipIntro() { endIntro(); }
+
+            function stopIntro() {
+                introActive = false;
+                if (introRaf) cancelAnimationFrame(introRaf);
+                introRaf = null;
+                clearTimeout(introHideTimer);
+                introEl.classList.add('hidden');
+                introEl.classList.remove('fade-out');
+                modalOverlay.classList.remove('intro-on');
+            }
+
+            introEl.addEventListener('click', skipIntro);
 
             // --- Abrir / Fechar Modal Easter Egg ---
             function openSnakeModal() {
@@ -891,11 +1512,13 @@
                 modalOverlay.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('snake-open'); // [NOVO] trava a rolagem da página
                 showMenu();
+                startIntro();
             }
 
             function closeSnakeModal() {
                 isModalOpen = false;
                 stopMoveLoop();
+                stopIntro();
                 modalOverlay.classList.remove('active');
                 modalOverlay.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('snake-open'); // [NOVO]
@@ -938,9 +1561,46 @@
                 lcdBox.addEventListener('touchcancel', () => { start = null; }, { passive: true });
             })();
 
+            function isWall(x, y) {
+                return MAZES[mazeIndex].walls.some(w => w.x === x && w.y === y) ||
+                       extraWalls.some(w => w.x === x && w.y === y);
+            }
+
+            function hasWallNear(x, y) {
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        const cx = (x + dx + COLS) % COLS;
+                        const cy = (y + dy + ROWS) % ROWS;
+                        if (isWall(cx, cy)) return true;
+                    }
+                }
+                return false;
+            }
+
+            // Obstáculos isolados (1 bloco) que nascem longe da cabeça e fora da linha de respawn
+            function addPhaseWalls(want) {
+                const head = snake[0];
+                let placed = 0;
+                let attempts = 0;
+                while (placed < want && attempts < 600) {
+                    attempts++;
+                    const rx = Math.floor(Math.random() * COLS);
+                    const ry = Math.floor(Math.random() * ROWS);
+                    if (isOccupied(rx, ry)) continue;
+                    if (food.x === rx && food.y === ry) continue;
+                    if (ry === 6 && rx <= 12) continue;
+                    const dx = Math.abs(rx - head.x);
+                    const dy = Math.abs(ry - head.y);
+                    if (Math.min(dx, COLS - dx) + Math.min(dy, ROWS - dy) < 5) continue;
+                    if (hasWallNear(rx, ry)) continue;
+                    extraWalls.push({ x: rx, y: ry });
+                    placed++;
+                }
+            }
+
             function isOccupied(x, y) {
                 if (snake.some(seg => seg.x === x && seg.y === y)) return true;
-                if (MAZES[mazeIndex].walls.some(w => w.x === x && w.y === y)) return true;
+                if (isWall(x, y)) return true;
                 if (bonus && bonus.x === x && bonus.y === y) return true;
                 return false;
             }
@@ -960,32 +1620,37 @@
 
             // [NOVO] Sorteio de bônus com pesos diferentes
             function pickBonus() {
-                const r = Math.random();
-                if (r < 0.40) return BONUS_TYPES[0];  // 🐞 pontos normais
-                if (r < 0.70) return BONUS_TYPES[1];  // 🕷️ pontos em dobro
-                if (r < 0.90) return BONUS_TYPES[3];  // 🐢 deixa a cobra mais lenta
-                return BONUS_TYPES[2];                // 🐸 rara: +1 vida (máx. 3)
+                const total = BONUS_ITEMS.reduce((a, b) => a + b.weight, 0);
+                let r = Math.random() * total;
+                for (const it of BONUS_ITEMS) {
+                    r -= it.weight;
+                    if (r < 0) return it;
+                }
+                return BONUS_ITEMS[0];
             }
 
-            function spawnBonus() {
+            // forced = item da tabela BONUS_ITEMS criado por código secreto (não some com o tempo)
+            function spawnBonus(forced) {
                 let attempts = 0;
                 while (attempts < 400) {
                     const rx = Math.floor(Math.random() * COLS);
                     const ry = Math.floor(Math.random() * ROWS);
                     if (!isOccupied(rx, ry) && !(food.x === rx && food.y === ry)) {
-                        const chosen = pickBonus(); // [NOVO]
+                        const chosen = forced || pickBonus();
                         bonus = {
                             x: rx,
                             y: ry,
                             icon: chosen.icon,
                             type: chosen.type,
-                            ticks: 22
+                            perm: !!forced,
+                            ticks: forced ? Infinity : Math.max(BONUS_TICKS_MIN, BONUS_TICKS_BASE - phase * BONUS_TICKS_PER_PHASE)
                         };
                         updateHUD();
-                        return;
+                        return true;
                     }
                     attempts++;
                 }
+                return false;
             }
 
             function startGame() {
@@ -1003,30 +1668,54 @@
                 foodsEaten = 0;
                 bonus = null;
                 lives = 3;      // [NOVO]
-                slowTicks = 0;  // [NOVO]
-
+                slowTicks = 0;
+                suspended = false;
+                currentMode = MODES[menuMode];
+                stageList = currentMode.stages;
+                phase = 1;
+                phaseStartScore = 0;
+                extraWalls = [];
+                applyStage();
                 spawnFood();
                 updateHUD();
 
                 screenMenu.classList.add('hidden');
                 screenPause.classList.add('hidden');
+                screenPhase.classList.add('hidden');
                 screenGameover.classList.add('hidden');
+                screenReady.classList.add('hidden');
+                screenName.classList.add('hidden');
+                nameEntryOpen = false;
 
-                gameState = 'PLAYING';
                 sfx.menu();
                 draw();
-                startMoveLoop();
+                enterReady();
             }
 
-            function showMenu() {
+            function showMenu(keep) {
                 stopMoveLoop();
                 gameState = 'MENU';
-                bonus = null;
-                lives = 3; // [NOVO]
+                if (!keep) {
+                    suspended = false;
+                    bonus = null;
+                    lives = 3;
+                    score = 0;
+                    phase = 1;
+                    phaseStartScore = 0;
+                    extraWalls = [];
+                    slowTicks = 0;
+                    currentMode = MODES[menuMode];
+                    stageList = currentMode.stages;
+                }
+                nameEntryOpen = false;
+                menuIndex = 0;
                 updateHUD();
                 updateMenuUI();
                 screenMenu.classList.remove('hidden');
                 screenPause.classList.add('hidden');
+                screenPhase.classList.add('hidden');
+                screenReady.classList.add('hidden');
+                screenName.classList.add('hidden');
                 screenGameover.classList.add('hidden');
                 draw();
             }
@@ -1035,35 +1724,135 @@
                 if (gameState === 'PLAYING') {
                     stopMoveLoop();
                     gameState = 'PAUSED';
+                    pauseIndex = 0;
+                    updatePauseUI();
                     screenPause.classList.remove('hidden');
                     sfx.menu();
                 } else if (gameState === 'PAUSED') {
-                    gameState = 'PLAYING';
                     screenPause.classList.add('hidden');
                     sfx.menu();
-                    startMoveLoop();
+                    enterReady();
                 }
             }
 
-            // [NOVO] Ranking local (top 5 guardado no navegador)
-            function loadRank() {
-                try { return JSON.parse(localStorage.getItem(RANK_KEY) || '[]'); }
-                catch (e) { return []; }
+            function updatePauseUI() {
+                pauseInfo.innerHTML = stageLabel() + '<br>' + formatScore(score);
+                pauseOptions.forEach((opt, idx) => {
+                    opt.classList.toggle('selected', idx === pauseIndex);
+                });
             }
 
-            function saveRank(s) {
-                if (s <= 0) return;
-                const r = loadRank();
-                r.push({ s: s, m: MAZES[mazeIndex].name, l: level });
-                r.sort((a, b) => b.s - a.s);
-                try { localStorage.setItem(RANK_KEY, JSON.stringify(r.slice(0, 5))); }
-                catch (e) {}
+            // 0 = continuar, 1 = reiniciar partida, 2 = voltar ao menu
+            function pauseAction(i) {
+                if (i === 0) togglePause();
+                else if (i === 1) startGame();
+                else suspendToMenu();
             }
 
-            function rankHTML() {
-                const r = loadRank().slice(0, 3);
-                if (!r.length) return '---';
-                return r.map((e, i) => `${i + 1}. ${formatScore(e.s)} ${e.m}`).join('<br>');
+            function phaseGoal() {
+                return level * PHASE_GOAL_MULT * (PHASE_GOAL_BASE + PHASE_GOAL_STEP * phase);
+            }
+
+            function advancePhase() {
+                stopMoveLoop();
+                phase++;
+                phaseStartScore = score;
+                const st = stageList[phase - 1];
+                resetSnake();
+                // item criado por código secreto não some: volta em outro lugar da nova fase
+                const keepItem = (bonus && bonus.perm) ? BONUS_ITEMS.find(b => b.type === bonus.type) : null;
+                bonus = null;
+                slowTicks = 0;
+                applyStage();
+                spawnFood();
+                if (keepItem) spawnBonus(keepItem);
+                let msg;
+                if (st.blocks > 0) msg = (st.final ? 'ULTIMA FASE<br>' : 'BLOCOS SOLTOS<br>') + st.blocks + ' NO CAMPO';
+                else msg = 'NOVO LABIRINTO<br>' + st.name;
+                gameState = 'PHASE';
+                readyLockUntil = Date.now() + 450;
+                phaseTitle.textContent = 'FASE ' + phase;
+                phaseInfo.innerHTML = msg + '<br><span class="blink">APERTE QUALQUER TECLA</span>';
+                screenPhase.classList.remove('hidden');
+                sfx.phase();
+                buzz([30, 30, 30, 30, 60]);
+                updateHUD();
+                draw();
+            }
+
+            // Placar (top 10) guardado no navegador
+            function loadBoard() {
+                try {
+                    const b = JSON.parse(localStorage.getItem(BOARD_KEY) || '[]');
+                    return Array.isArray(b) ? b.filter(e => e && typeof e.s === 'number') : [];
+                } catch (e) { return []; }
+            }
+
+            function saveBoard() {
+                try { localStorage.setItem(BOARD_KEY, JSON.stringify(board)); } catch (e) {}
+            }
+
+            function renderBoard() {
+                boardList.textContent = '';
+                if (!board.length) {
+                    const li = document.createElement('li');
+                    li.className = 'sb-empty';
+                    li.style.display = 'block';
+                    li.textContent = 'SEM RECORDES AINDA. SEJA O PRIMEIRO!';
+                    boardList.appendChild(li);
+                    return;
+                }
+                board.forEach((e, i) => {
+                    const li = document.createElement('li');
+                    if (e === lastEntry) li.className = 'mine';
+                    const r = document.createElement('span');
+                    r.textContent = (i + 1) + '.';
+                    const n = document.createElement('span');
+                    n.className = 'sb-name';
+                    n.textContent = e.n || '---';
+                    const sc = document.createElement('span');
+                    sc.textContent = formatScore(e.s);
+                    const ph = document.createElement('span');
+                    ph.className = 'sb-phase';
+                    ph.textContent = e.t || ('F' + (e.p || 1));
+                    li.appendChild(r); li.appendChild(n); li.appendChild(sc); li.appendChild(ph);
+                    boardList.appendChild(li);
+                });
+            }
+
+            function qualifiesForBoard(sc) {
+                return sc > 0 && (board.length < BOARD_SIZE || sc > board[board.length - 1].s);
+            }
+
+            function addToBoard(sc) {
+                const entry = { n: '---', s: sc, t: boardTag(), d: Date.now() };
+                board.push(entry);
+                board.sort((a, b) => (b.s - a.s) || (a.d - b.d));
+                board = board.slice(0, BOARD_SIZE);
+                saveBoard();
+                return entry;
+            }
+
+            function showNameEntry(isNew) {
+                nameEntryOpen = true;
+                nameTitle.textContent = isNew ? 'NOVO RECORDE!' : 'TOP 10!';
+                nameInput.value = '';
+                screenName.classList.remove('hidden');
+                setTimeout(() => { try { nameInput.focus(); } catch (e) {} }, 60);
+            }
+
+            function saveName() {
+                if (!nameEntryOpen) return;
+                const raw = nameInput.value.trim().replace(/\s+/g, ' ').slice(0, 12).trim().toUpperCase();
+                if (lastEntry) {
+                    lastEntry.n = raw || 'ANONIMO';
+                    saveBoard();
+                }
+                nameEntryOpen = false;
+                screenName.classList.add('hidden');
+                try { nameInput.blur(); } catch (e) {}
+                renderBoard();
+                screenGameover.classList.remove('hidden');
             }
 
             // [NOVO] Fim de jogo de verdade (antiga triggerGameOver)
@@ -1076,13 +1865,19 @@
                     highScore = score;
                     localStorage.setItem('dkb_snake_hi', highScore);
                 }
-                saveRank(score);
+                lastEntry = null;
+                let isNew = false;
+                if (qualifiesForBoard(score)) {
+                    lastEntry = addToBoard(score);
+                    isNew = (board[0] === lastEntry);
+                }
+                renderBoard();
                 updateHUD();
 
                 gameoverStats.innerHTML =
-                    `PONTOS: ${formatScore(score)}<br>RECORDE: ${formatScore(highScore)}` +
-                    `<br><br>TOP 3<br>${rankHTML()}`;
-                screenGameover.classList.remove('hidden');
+                    `PONTOS: ${formatScore(score)}<br>${stageLabel()}<br>RECORDE: ${formatScore(highScore)}`;
+                if (lastEntry) showNameEntry(isNew);
+                else screenGameover.classList.remove('hidden');
             }
 
             // [NOVO] Perde uma vida; só termina o jogo quando as vidas acabam
@@ -1143,7 +1938,7 @@
                 if (ny >= ROWS) ny = 0;
 
                 const walls = MAZES[mazeIndex].walls;
-                if (walls.some(w => w.x === nx && w.y === ny)) {
+                if (isWall(nx, ny)) {
                     triggerGameOver();
                     return;
                 }
@@ -1179,10 +1974,13 @@
 
                 // [NOVO] Cada bônus tem um efeito diferente
                 if (ateBonus) {
-                    let pts = bonus.ticks * 4 + (level * 5);
-                    if (bonus.type === 'spider') pts *= 2;
-                    if (bonus.type === 'frog' && lives < 3) lives++;
-                    if (bonus.type === 'turtle') { slowTicks = 25; startMoveLoop(); }
+                    const item = BONUS_ITEMS.find(b => b.type === bonus.type);
+                    let pts = 0;
+                    if (!bonus.perm || SECRET_ITEM_GIVES_POINTS) {
+                        const t = isFinite(bonus.ticks) ? bonus.ticks : BONUS_TICKS_BASE;
+                        pts = (Math.round(t / 2) * 4 + (level * 5)) * item.pointsMult;
+                    }
+                    if (item.effect) item.effect();
                     score += pts;
                     bonus = null;
                     sfx.bonus();
@@ -1207,8 +2005,11 @@
                     localStorage.setItem('dkb_snake_hi', highScore);
                 }
 
+                const leveledUp = !stageList[phase - 1].final && (score - phaseStartScore) >= phaseGoal();
+
                 updateHUD();
                 draw();
+                if (leveledUp) advancePhase();
             }
 
             // --- Renderização ---
@@ -1216,7 +2017,7 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 ctx.fillStyle = PIXEL_COLOR;
-                for (const w of MAZES[mazeIndex].walls) {
+                for (const w of (gameState === 'MENU' ? MAZES[MODES[menuMode].stages[0].maze].walls : MAZES[mazeIndex].walls.concat(extraWalls))) {
                     const px = w.x * CELL;
                     const py = w.y * CELL;
                     ctx.fillRect(px, py, CELL, CELL);
@@ -1356,86 +2157,90 @@
                     return;
                 }
 
+                if (introActive) {
+                    e.preventDefault();
+                    skipIntro();
+                    return;
+                }
+                if (e.target === nameInput) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveName();
+                    }
+                    return;
+                }
+
                 const key = e.key.toLowerCase();
+                if (gameState === 'PLAYING' || gameState === 'READY' || gameState === 'PHASE') trackSecretCode(key);
 
                 if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) {
                     e.preventDefault();
                 }
 
+                if (gameState === 'READY' || gameState === 'PHASE') {
+                    const isDirKey = DIR_KEYS.includes(key);
+                    const started = beginPlay();
+                    if (!started || !isDirKey) return;
+                }
+
                 if (gameState === 'MENU') {
-                    if (key === 'arrowup' || key === 'w' || key === 'z' || key === '2') {
-                        menuIndex = (menuIndex + 2) % 3;
-                        sfx.menu();
-                        updateMenuUI();
-                    } else if (key === 'arrowdown' || key === 's' || key === '8' || key === '5') {
-                        menuIndex = (menuIndex + 1) % 3;
-                        sfx.menu();
-                        updateMenuUI();
-                    } else if (key === 'arrowright' || key === 'd' || key === '6') {
-                        if (menuIndex === 1) {
-                            level = (level % 9) + 1;
-                            sfx.menu();
-                            updateMenuUI();
-                        } else if (menuIndex === 2) {
-                            mazeIndex = (mazeIndex + 1) % MAZES.length;
-                            sfx.menu();
-                            updateMenuUI();
-                            draw();
-                        }
-                    } else if (key === 'arrowleft' || key === 'a' || key === 'q' || key === '4') {
-                        if (menuIndex === 1) {
-                            level = ((level - 2 + 9) % 9) + 1;
-                            sfx.menu();
-                            updateMenuUI();
-                        } else if (menuIndex === 2) {
-                            mazeIndex = (mazeIndex - 1 + MAZES.length) % MAZES.length;
-                            sfx.menu();
-                            updateMenuUI();
-                            draw();
-                        }
+                    if (key === 'arrowup' || key === 'w' || key === 'z') {
+                        menuMove(-1);
+                    } else if (key === 'arrowdown' || key === 's') {
+                        menuMove(1);
+                    } else if (key === 'arrowright' || key === 'd') {
+                        menuAdjust(menuAction(), 1);
+                    } else if (key === 'arrowleft' || key === 'a' || key === 'q') {
+                        menuAdjust(menuAction(), -1);
                     } else if (key === 'enter' || key === ' ') {
-                        if (menuIndex === 0) startGame();
-                        else if (menuIndex === 1) {
-                            level = (level % 9) + 1;
-                            sfx.menu();
-                            updateMenuUI();
-                        } else if (menuIndex === 2) {
-                            mazeIndex = (mazeIndex + 1) % MAZES.length;
-                            sfx.menu();
-                            updateMenuUI();
-                            draw();
-                        }
+                        menuActivate(menuAction());
                     }
                     return;
                 }
 
                 if (gameState === 'GAMEOVER') {
+                    if (nameEntryOpen) {
+                        if (key === 'enter') saveName();
+                        return;
+                    }
                     if (key === 'enter' || key === ' ') {
                         startGame();
                     }
                     return;
                 }
 
-                if (key === 'p') {
+                if (gameState === 'PAUSED') {
+                    if (key === 'p') {
+                        togglePause();
+                    } else if (key === 'arrowup' || key === 'w' || key === 'z') {
+                        pauseIndex = (pauseIndex + 2) % 3;
+                        sfx.menu();
+                        updatePauseUI();
+                    } else if (key === 'arrowdown' || key === 's') {
+                        pauseIndex = (pauseIndex + 1) % 3;
+                        sfx.menu();
+                        updatePauseUI();
+                    } else if (key === 'enter' || key === ' ') {
+                        pauseAction(pauseIndex);
+                    }
+                    return;
+                }
+
+                if (key === 'p' || key === ' ') {
                     togglePause();
                     return;
                 }
 
-                if (gameState === 'PAUSED' && (key === 'enter' || key === ' ')) {
-                    togglePause();
-                    return;
-                }
-
-                if (key === 'arrowup' || key === 'w' || key === 'z' || key === '2') {
+                if (key === 'arrowup' || key === 'w' || key === 'z') {
                     queueDirection({ x: 0, y: -1 });
                     flashKey('key-up');
-                } else if (key === 'arrowdown' || key === 's' || key === '8' || key === '5') {
+                } else if (key === 'arrowdown' || key === 's') {
                     queueDirection({ x: 0, y: 1 });
                     flashKey('key-down');
-                } else if (key === 'arrowleft' || key === 'a' || key === 'q' || key === '4') {
+                } else if (key === 'arrowleft' || key === 'a' || key === 'q') {
                     queueDirection({ x: -1, y: 0 });
                     flashKey('key-left');
-                } else if (key === 'arrowright' || key === 'd' || key === '6') {
+                } else if (key === 'arrowright' || key === 'd') {
                     queueDirection({ x: 1, y: 0 });
                     flashKey('key-right');
                 }
@@ -1449,27 +2254,25 @@
             }
 
             function handleDirInput(dirName) {
+                if (introActive) { skipIntro(); return; }
+                if (gameState === 'READY' || gameState === 'PHASE') beginPlay();
                 if (gameState === 'MENU') {
+                    if (dirName === 'UP') menuMove(-1);
+                    else if (dirName === 'DOWN') menuMove(1);
+                    else if (dirName === 'RIGHT') menuAdjust(menuAction(), 1);
+                    else if (dirName === 'LEFT') menuAdjust(menuAction(), -1);
+                    return;
+                }
+
+                if (gameState === 'PAUSED') {
                     if (dirName === 'UP') {
-                        menuIndex = (menuIndex + 2) % 3;
+                        pauseIndex = (pauseIndex + 2) % 3;
                         sfx.menu();
-                        updateMenuUI();
+                        updatePauseUI();
                     } else if (dirName === 'DOWN') {
-                        menuIndex = (menuIndex + 1) % 3;
+                        pauseIndex = (pauseIndex + 1) % 3;
                         sfx.menu();
-                        updateMenuUI();
-                    } else if (dirName === 'RIGHT') {
-                        if (menuIndex === 1) level = (level % 9) + 1;
-                        if (menuIndex === 2) mazeIndex = (mazeIndex + 1) % MAZES.length;
-                        sfx.menu();
-                        updateMenuUI();
-                        draw();
-                    } else if (dirName === 'LEFT') {
-                        if (menuIndex === 1) level = ((level - 2 + 9) % 9) + 1;
-                        if (menuIndex === 2) mazeIndex = (mazeIndex - 1 + MAZES.length) % MAZES.length;
-                        sfx.menu();
-                        updateMenuUI();
-                        draw();
+                        updatePauseUI();
                     }
                     return;
                 }
@@ -1491,21 +2294,21 @@
                 btn.addEventListener('click', triggerDir);
             });
 
-            menuOptions.forEach((opt, idx) => {
+            menuOptions.forEach((opt) => {
                 opt.addEventListener('click', () => {
-                    menuIndex = idx;
-                    if (idx === 0) {
-                        startGame();
-                    } else if (idx === 1) {
-                        level = (level % 9) + 1;
-                        sfx.menu();
-                        updateMenuUI();
-                    } else if (idx === 2) {
-                        mazeIndex = (mazeIndex + 1) % MAZES.length;
-                        sfx.menu();
-                        updateMenuUI();
-                        draw();
-                    }
+                    if (gameState !== 'MENU') return;
+                    const idx = menuItems().indexOf(opt);
+                    if (idx >= 0) menuIndex = idx;
+                    updateMenuUI();
+                    menuActivate(opt.dataset.action);
+                });
+            });
+
+            pauseOptions.forEach((opt, idx) => {
+                opt.addEventListener('click', () => {
+                    if (gameState !== 'PAUSED') return;
+                    pauseIndex = idx;
+                    pauseAction(idx);
                 });
             });
 
@@ -1513,23 +2316,29 @@
             document.getElementById('btn-restart').addEventListener('click', startGame);
 
             document.getElementById('btn-action').addEventListener('click', () => {
-                if (gameState === 'MENU') {
-                    startGame();
-                } else if (gameState === 'GAMEOVER') {
-                    startGame();
-                } else if (gameState === 'PAUSED') {
-                    togglePause();
-                } else if (gameState === 'PLAYING') {
-                    showMenu();
+                if (introActive) { skipIntro(); return; }
+                if (gameState === 'READY' || gameState === 'PHASE') beginPlay();
+                else if (gameState === 'MENU') menuActivate(menuAction());
+                else if (gameState === 'PAUSED') pauseAction(pauseIndex);
+                else if (gameState === 'PLAYING') togglePause();
+                else if (gameState === 'GAMEOVER') {
+                    if (nameEntryOpen) saveName();
+                    else startGame();
                 }
             });
 
             document.getElementById('btn-pause').addEventListener('click', () => {
-                if (gameState === 'PLAYING' || gameState === 'PAUSED') {
-                    togglePause();
-                } else if (gameState === 'GAMEOVER') {
-                    showMenu();
-                }
+                if (introActive) { skipIntro(); return; }
+                if (gameState === 'READY' || gameState === 'PHASE') beginPlay();
+                else if (gameState === 'PLAYING' || gameState === 'PAUSED') togglePause();
+                else if (gameState === 'GAMEOVER' && !nameEntryOpen) showMenu();
+            });
+
+            document.getElementById('btn-name-save').addEventListener('click', saveName);
+
+            // Toque na tela do jogo também inicia (qualquer tecla / toque)
+            document.querySelector('.lcd-container').addEventListener('click', () => {
+                if (gameState === 'READY' || gameState === 'PHASE') beginPlay();
             });
 
             const btnSound = document.getElementById('btn-sound');
@@ -1539,6 +2348,8 @@
                 if (soundEnabled) sfx.menu();
             });
 
+            board = loadBoard();
+            renderBoard();
             updateHUD();
             updateMenuUI();
         })();
