@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>David Duque - Portfólio 3D & Devlog</title>
+    <!-- Ícone da aba do navegador (usa a logo DKB.png da raiz do site) -->
+    <link rel="icon" type="image/png" href="DKB.png">
+    <link rel="apple-touch-icon" href="DKB.png">
     <!-- Script do Google Model Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <!-- Fonte retrô para o Easter Egg DKB Arcade -->
@@ -673,9 +676,9 @@
 
                 <div class="card">
                     <div class="viewer-wrap">
-                        <!-- data-sources: tenta primeiro o arquivo da pasta "modelos/" do site e, se não existir, o link do release (separados por | ) -->
+                        <!-- data-sources: o visualizador tenta cada endereço, na ordem (separados por | ): 1) versão leve "_preview" na pasta modelos, 2) arquivo completo na pasta modelos, 3) link do release. O botão de baixar sempre usa o arquivo completo do release. -->
                         <model-viewer
-                            data-sources="modelos/Predio_Haussmann_David_Duque_DKB.glb | https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb"
+                            data-sources="modelos/Predio_Haussmann_preview.glb | modelos/Predio_Haussmann_David_Duque_DKB.glb | https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb"
                             alt="Prédio Haussmann 3D"
                             camera-controls
                             auto-rotate
@@ -707,9 +710,9 @@
 
                 <div class="card">
                     <div class="viewer-wrap">
-                        <!-- data-sources: tenta primeiro o arquivo da pasta "modelos/" do site e, se não existir, o link do release (separados por | ) -->
+                        <!-- data-sources: o visualizador tenta cada endereço, na ordem (separados por | ): 1) versão leve "_preview" na pasta modelos, 2) arquivo completo na pasta modelos, 3) link do release. O botão de baixar sempre usa o arquivo completo do release. -->
                         <model-viewer
-                            data-sources="modelos/DKB_dbk_loog.glb | https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb"
+                            data-sources="modelos/DKB_logo_preview.glb | modelos/DKB_dbk_loog.glb | https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb"
                             alt="Logo DKB 3D"
                             camera-controls
                             auto-rotate
@@ -1241,7 +1244,7 @@
             //      (https://....firebaseio.com) e cole em GLOBAL_BOARD_URL
             //  Se o endereço estiver errado ou fora do ar, o jogo usa o placar local.
             // =====================================================================
-            const GLOBAL_BOARD_URL = 'https://david-duque-default-rtdb.firebaseio.com';
+            const GLOBAL_BOARD_URL = '';    // ex.: 'https://meu-projeto-default-rtdb.firebaseio.com'
             const GLOBAL_BOARD_PATH = 'board';
             const BOARD_TIMEOUT_MS = 4000;  // tempo máximo de espera pela internet
 
