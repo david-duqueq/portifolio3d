@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>David Kauê - Portfólio 3D & Devlog</title>
+    <title>David Duque - Portfólio 3D & Devlog</title>
     <!-- Script do Google Model Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <!-- Fonte retrô para o Easter Egg DKB Arcade -->
@@ -42,7 +42,7 @@
         }
         header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
 
-        /* Estilo do Gatilho Easter Egg no nome David Kauê */
+        /* Estilo do Gatilho Easter Egg no nome David Duque */
         #easter-egg-trigger {
             cursor: pointer;
             user-select: none;
@@ -91,7 +91,40 @@
             display: flex;
             flex-direction: column;
         }
-        .card model-viewer { width: 100%; height: 240px; background: #16161b; }
+        .card model-viewer { width: 100%; height: 100%; background: transparent; }
+
+        /* Visualizador 3D de cada modelo */
+        .viewer-wrap { position: relative; height: 270px; background: #16161b; overflow: hidden; }
+        .viewer-wrap model-viewer {
+            --poster-color: transparent;
+            --progress-bar-color: var(--accent);
+            display: block;
+        }
+        .viewer-tools { position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 6px; z-index: 2; }
+        .viewer-tools button {
+            width: 36px; height: 36px; border-radius: 8px;
+            border: 1px solid #32323c; background: rgba(30, 30, 36, 0.88);
+            color: var(--text-main); cursor: pointer; font-size: 20px; line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; touch-action: manipulation;
+        }
+        .viewer-tools button:hover, .viewer-tools button.on { border-color: var(--accent); color: var(--accent); }
+        .viewer-tools svg { width: 19px; height: 19px; fill: currentColor; pointer-events: none; }
+        .viewer-hint {
+            position: absolute; left: 10px; bottom: 8px; z-index: 2;
+            font-size: 0.72rem; color: var(--text-muted);
+            background: rgba(18, 18, 20, 0.65); padding: 3px 9px; border-radius: 6px;
+            pointer-events: none; transition: opacity 0.5s;
+        }
+        .viewer-hint.hide { opacity: 0; }
+        .viewer-msg {
+            position: absolute; inset: 0; z-index: 1; padding: 1.5rem;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            color: var(--text-muted); font-size: 0.9rem; background: #16161b;
+        }
+        .viewer-msg[hidden] { display: none; }
+        .viewer-wrap.is-full { position: fixed; inset: 0; height: 100%; z-index: 9000; }
+        body.viewer-full { overflow: hidden; }
         .card-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .card-body h3 { margin-bottom: 0.5rem; }
         .card-body p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
@@ -622,7 +655,7 @@
 
     <header>
         <img src="DKB.png" alt="Logo DKB" class="logo">
-        <h1><span id="easter-egg-trigger" title="Clique para jogar">David Kauê</span> - Portfólio 3D</h1>
+        <h1><span id="easter-egg-trigger" title="Clique para jogar">David Duque</span> - Portfólio 3D</h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
         <div class="social-links">
             <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank">YouTube</a>
@@ -636,16 +669,33 @@
         <section>
             <h2>Modelos 3D para Download</h2>
             <div class="models-grid">
-                
-                <!-- Modelo 1: Prédio Haussmann -->
+                <!-- Para adicionar um novo modelo, copie um bloco "card" abaixo e troque os textos e os caminhos -->
+
                 <div class="card">
-                    <model-viewer 
-                        src="https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb" 
-                        alt="Prédio Haussmann 3D" 
-                        auto-rotate 
-                        camera-controls 
-                        shadow-intensity="1">
-                    </model-viewer>
+                    <div class="viewer-wrap">
+                        <!-- data-sources: tenta primeiro o arquivo da pasta "modelos/" do site e, se não existir, o link do release (separados por | ) -->
+                        <model-viewer
+                            data-sources="modelos/Predio_Haussmann_David_Duque_DKB.glb | https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb"
+                            alt="Prédio Haussmann 3D"
+                            camera-controls
+                            auto-rotate
+                            touch-action="pan-y"
+                            shadow-intensity="1"
+                            environment-image="neutral"
+                            interaction-prompt="none"
+                            min-camera-orbit="auto auto 30%"
+                            max-camera-orbit="auto auto 300%">
+                        </model-viewer>
+                        <div class="viewer-tools">
+                            <button type="button" data-act="zoom-in" title="Aproximar" aria-label="Aproximar">+</button>
+                            <button type="button" data-act="zoom-out" title="Afastar" aria-label="Afastar">&minus;</button>
+                            <button type="button" data-act="reset" title="Voltar à posição inicial" aria-label="Voltar à posição inicial"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+                            <button type="button" data-act="spin" class="on" title="Girar sozinho (liga/desliga)" aria-label="Girar sozinho"><svg viewBox="0 0 24 24"><path d="M7.77 6.76L6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52l-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"/></svg></button>
+                            <button type="button" data-act="full" title="Tela cheia" aria-label="Tela cheia"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></button>
+                        </div>
+                        <div class="viewer-hint">Arraste para girar &middot; role ou pince para zoom</div>
+                        <div class="viewer-msg" hidden>Não foi possível carregar o visualizador deste modelo. Você ainda pode baixar o arquivo pelo botão abaixo.</div>
+                    </div>
                     <div class="card-body">
                         <div>
                             <h3>Prédio Haussmann</h3>
@@ -655,15 +705,31 @@
                     </div>
                 </div>
 
-                <!-- Modelo 2: Logo DKB 3D -->
                 <div class="card">
-                    <model-viewer 
-                        src="https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb" 
-                        alt="Logo DKB 3D" 
-                        auto-rotate 
-                        camera-controls 
-                        shadow-intensity="1">
-                    </model-viewer>
+                    <div class="viewer-wrap">
+                        <!-- data-sources: tenta primeiro o arquivo da pasta "modelos/" do site e, se não existir, o link do release (separados por | ) -->
+                        <model-viewer
+                            data-sources="modelos/DKB_dbk_loog.glb | https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb"
+                            alt="Logo DKB 3D"
+                            camera-controls
+                            auto-rotate
+                            touch-action="pan-y"
+                            shadow-intensity="1"
+                            environment-image="neutral"
+                            interaction-prompt="none"
+                            min-camera-orbit="auto auto 30%"
+                            max-camera-orbit="auto auto 300%">
+                        </model-viewer>
+                        <div class="viewer-tools">
+                            <button type="button" data-act="zoom-in" title="Aproximar" aria-label="Aproximar">+</button>
+                            <button type="button" data-act="zoom-out" title="Afastar" aria-label="Afastar">&minus;</button>
+                            <button type="button" data-act="reset" title="Voltar à posição inicial" aria-label="Voltar à posição inicial"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+                            <button type="button" data-act="spin" class="on" title="Girar sozinho (liga/desliga)" aria-label="Girar sozinho"><svg viewBox="0 0 24 24"><path d="M7.77 6.76L6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52l-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"/></svg></button>
+                            <button type="button" data-act="full" title="Tela cheia" aria-label="Tela cheia"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></button>
+                        </div>
+                        <div class="viewer-hint">Arraste para girar &middot; role ou pince para zoom</div>
+                        <div class="viewer-msg" hidden>Não foi possível carregar o visualizador deste modelo. Você ainda pode baixar o arquivo pelo botão abaixo.</div>
+                    </div>
                     <div class="card-body">
                         <div>
                             <h3>Logo DKB 3D</h3>
@@ -697,8 +763,67 @@
     </main>
 
     <footer>
-        <p>© 2026 David Kauê. Hospedado com GitHub Pages.</p>
+        <p>© 2026 David Duque. Hospedado com GitHub Pages.</p>
     </footer>
+
+    <script>
+        // Visualizadores 3D dos modelos: carregamento com plano B, zoom, reset, giro automático e tela cheia
+        (function () {
+            document.querySelectorAll('.viewer-wrap').forEach(function (wrap) {
+                const mv = wrap.querySelector('model-viewer');
+                const msg = wrap.querySelector('.viewer-msg');
+                const hint = wrap.querySelector('.viewer-hint');
+                const sources = (mv.getAttribute('data-sources') || '').split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+                let idx = 0;
+
+                function load() {
+                    if (idx >= sources.length) { msg.hidden = false; return; }
+                    msg.hidden = true;
+                    mv.setAttribute('src', sources[idx]);
+                }
+                mv.addEventListener('error', function () { idx++; load(); });
+                mv.addEventListener('load', function () { msg.hidden = true; });
+                load();
+
+                ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
+                    mv.addEventListener(ev, function () { if (hint) hint.classList.add('hide'); }, { once: true, passive: true });
+                });
+
+                function zoom(factor) {
+                    if (!mv.loaded) return;
+                    const o = mv.getCameraOrbit();
+                    mv.cameraOrbit = o.theta + 'rad ' + o.phi + 'rad ' + (o.radius * factor) + 'm';
+                }
+                function setFull(on) {
+                    wrap.classList.toggle('is-full', on);
+                    document.body.classList.toggle('viewer-full', on);
+                    mv.setAttribute('touch-action', on ? 'none' : 'pan-y');
+                }
+
+                wrap.querySelectorAll('.viewer-tools button').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        const act = btn.getAttribute('data-act');
+                        if (act === 'zoom-in') zoom(0.8);
+                        else if (act === 'zoom-out') zoom(1.25);
+                        else if (act === 'reset') {
+                            mv.cameraOrbit = 'auto auto auto';
+                            mv.cameraTarget = 'auto auto auto';
+                            mv.fieldOfView = 'auto';
+                        } else if (act === 'spin') {
+                            mv.autoRotate = !mv.autoRotate;
+                            btn.classList.toggle('on', mv.autoRotate);
+                        } else if (act === 'full') {
+                            setFull(!wrap.classList.contains('is-full'));
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && wrap.classList.contains('is-full')) setFull(false);
+                });
+            });
+        })();
+    </script>
 
     <!-- =========================================================
          MODAL EASTER EGG: DKB SNAKE
@@ -836,7 +961,7 @@
             <!-- Placar -->
             <aside class="scoreboard" id="scoreboard" aria-label="Placar">
                 <div class="sb-title">PLACAR</div>
-                <div class="sb-sub">TOP 10 &middot; DKB SNAKE</div>
+                <div class="sb-sub" id="sb-sub">TOP 10 &middot; DKB SNAKE</div>
                 <ol id="board-list"></ol>
             </aside>
           </div>
@@ -889,6 +1014,7 @@
             const menuContinue = document.getElementById('menu-continue');
             const phaseTrack = document.querySelector('.phase-track');
             const boardList = document.getElementById('board-list');
+            const sbSub = document.getElementById('sb-sub');
             const DIR_KEYS = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd', 'z', 'q'];
 
             const MAZES = [
@@ -1097,6 +1223,27 @@
             });
             let codeBuffer = '';
             let codeLastTime = 0;
+
+            // =====================================================================
+            //  CONFIGURAÇÕES DO JOGO (3/3): PLACAR GLOBAL (um placar para todos)
+            //
+            //  Para todos os visitantes verem o MESMO placar, cole abaixo o endereço
+            //  do seu Firebase Realtime Database. Deixe '' (vazio) para usar só o
+            //  placar local, que fica guardado no navegador de cada pessoa.
+            //
+            //  Passo a passo (plano gratuito):
+            //   1. Acesse console.firebase.google.com e crie um projeto
+            //   2. Menu "Build" -> "Realtime Database" -> "Criar banco de dados"
+            //      (escolha "modo bloqueado")
+            //   3. Aba "Regras": apague tudo, cole o conteúdo do arquivo
+            //      placar-regras-firebase.json e clique em "Publicar"
+            //   4. Aba "Dados": copie o endereço que aparece no topo
+            //      (https://....firebaseio.com) e cole em GLOBAL_BOARD_URL
+            //  Se o endereço estiver errado ou fora do ar, o jogo usa o placar local.
+            // =====================================================================
+            const GLOBAL_BOARD_URL = 'https://david-duque-default-rtdb.firebaseio.com';
+            const GLOBAL_BOARD_PATH = 'board';
+            const BOARD_TIMEOUT_MS = 4000;  // tempo máximo de espera pela internet
 
             // --- Áudio 8-bit ---
             let audioCtx = null;
@@ -1513,6 +1660,7 @@
                 document.body.classList.add('snake-open'); // [NOVO] trava a rolagem da página
                 showMenu();
                 startIntro();
+                refreshBoard();
             }
 
             function closeSnakeModal() {
@@ -1654,6 +1802,7 @@
             }
 
             function startGame() {
+                gameOverToken++;
                 stopMoveLoop();
 
                 snake = [
@@ -1693,6 +1842,7 @@
             }
 
             function showMenu(keep) {
+                gameOverToken++;
                 stopMoveLoop();
                 gameState = 'MENU';
                 if (!keep) {
@@ -1780,25 +1930,85 @@
                 draw();
             }
 
-            // Placar (top 10) guardado no navegador
+            // =====================================================================
+            //  PLACAR (top 10): global (Firebase) ou local (só neste navegador)
+            // =====================================================================
+            let boardMode = 'local';
+            let boardLoading = false;
+            let pendingScore = 0;
+            let pendingTag = '';
+            let gameOverToken = 0;
+
+            function useGlobalBoard() { return !!GLOBAL_BOARD_URL; }
+            function boardEndpoint() { return GLOBAL_BOARD_URL.replace(/\/+$/, '') + '/' + GLOBAL_BOARD_PATH + '.json'; }
+
+            function fetchTimeout(url, opts) {
+                const ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+                const timer = setTimeout(() => { if (ctl) ctl.abort(); }, BOARD_TIMEOUT_MS);
+                const o = Object.assign({}, opts || {});
+                if (ctl) o.signal = ctl.signal;
+                return fetch(url, o).finally(() => clearTimeout(timer));
+            }
+
+            function validEntry(e) {
+                return e && typeof e.s === 'number' && isFinite(e.s) && e.s >= 0 && typeof e.n === 'string';
+            }
+            function sortBoard(list) {
+                return list.filter(validEntry)
+                    .sort((a, b) => (b.s - a.s) || ((a.d || 0) - (b.d || 0)))
+                    .slice(0, BOARD_SIZE);
+            }
+
+            // Placar local (localStorage)
             function loadBoard() {
                 try {
                     const b = JSON.parse(localStorage.getItem(BOARD_KEY) || '[]');
-                    return Array.isArray(b) ? b.filter(e => e && typeof e.s === 'number') : [];
+                    return Array.isArray(b) ? sortBoard(b) : [];
                 } catch (e) { return []; }
             }
 
-            function saveBoard() {
-                try { localStorage.setItem(BOARD_KEY, JSON.stringify(board)); } catch (e) {}
+            // Atualiza a variável "board". Devolve uma Promise (já resolvida no modo local).
+            function refreshBoard() {
+                if (!useGlobalBoard()) {
+                    board = loadBoard();
+                    boardMode = 'local';
+                    return Promise.resolve();
+                }
+                boardLoading = true;
+                renderBoard();
+                return fetchTimeout(boardEndpoint() + '?orderBy=%22s%22&limitToLast=' + BOARD_SIZE)
+                    .then(res => {
+                        if (!res.ok) throw new Error('http ' + res.status);
+                        return res.json();
+                    })
+                    .then(data => {
+                        const list = data ? Object.keys(data).map(k => Object.assign({ id: k }, data[k])) : [];
+                        board = sortBoard(list);
+                        boardMode = 'global';
+                        if (board.length && board[0].s > highScore) {
+                            highScore = board[0].s;
+                            updateHUD();
+                        }
+                    })
+                    .catch(() => {
+                        board = loadBoard();
+                        boardMode = 'local';
+                    })
+                    .then(() => {
+                        boardLoading = false;
+                        renderBoard();
+                    });
             }
 
             function renderBoard() {
+                if (boardLoading) sbSub.textContent = 'CARREGANDO PLACAR...';
+                else sbSub.textContent = (boardMode === 'global') ? 'TOP 10 · TODOS OS JOGADORES' : 'TOP 10 · SO NESTE NAVEGADOR';
                 boardList.textContent = '';
                 if (!board.length) {
                     const li = document.createElement('li');
                     li.className = 'sb-empty';
                     li.style.display = 'block';
-                    li.textContent = 'SEM RECORDES AINDA. SEJA O PRIMEIRO!';
+                    li.textContent = boardLoading ? 'CARREGANDO...' : 'SEM RECORDES AINDA. SEJA O PRIMEIRO!';
                     boardList.appendChild(li);
                     return;
                 }
@@ -1824,13 +2034,32 @@
                 return sc > 0 && (board.length < BOARD_SIZE || sc > board[board.length - 1].s);
             }
 
-            function addToBoard(sc) {
-                const entry = { n: '---', s: sc, t: boardTag(), d: Date.now() };
-                board.push(entry);
-                board.sort((a, b) => (b.s - a.s) || (a.d - b.d));
-                board = board.slice(0, BOARD_SIZE);
-                saveBoard();
-                return entry;
+            // Envia a pontuação: global se configurado; se falhar, guarda no placar local
+            function submitEntry(entry) {
+                const saveLocal = () => {
+                    const list = loadBoard();
+                    list.push(entry);
+                    board = sortBoard(list);
+                    try { localStorage.setItem(BOARD_KEY, JSON.stringify(board)); } catch (e) {}
+                    boardMode = 'local';
+                    boardLoading = false;
+                    lastEntry = board.includes(entry) ? entry : null;
+                    renderBoard();
+                };
+                if (!useGlobalBoard()) {
+                    saveLocal();
+                    return Promise.resolve();
+                }
+                return fetchTimeout(boardEndpoint(), { method: 'POST', body: JSON.stringify(entry) })
+                    .then(res => {
+                        if (!res.ok) throw new Error('http ' + res.status);
+                        return res.json();
+                    })
+                    .then(out => refreshBoard().then(() => {
+                        lastEntry = board.find(e => e.id === out.name) || null;
+                        renderBoard();
+                    }))
+                    .catch(() => saveLocal());
             }
 
             function showNameEntry(isNew) {
@@ -1844,15 +2073,11 @@
             function saveName() {
                 if (!nameEntryOpen) return;
                 const raw = nameInput.value.trim().replace(/\s+/g, ' ').slice(0, 12).trim().toUpperCase();
-                if (lastEntry) {
-                    lastEntry.n = raw || 'ANONIMO';
-                    saveBoard();
-                }
                 nameEntryOpen = false;
                 screenName.classList.add('hidden');
                 try { nameInput.blur(); } catch (e) {}
-                renderBoard();
                 screenGameover.classList.remove('hidden');
+                submitEntry({ n: raw || 'ANONIMO', s: pendingScore, t: pendingTag, d: Date.now() });
             }
 
             // [NOVO] Fim de jogo de verdade (antiga triggerGameOver)
@@ -1865,19 +2090,32 @@
                     highScore = score;
                     localStorage.setItem('dkb_snake_hi', highScore);
                 }
+                pendingScore = score;
+                pendingTag = boardTag();
                 lastEntry = null;
-                let isNew = false;
-                if (qualifiesForBoard(score)) {
-                    lastEntry = addToBoard(score);
-                    isNew = (board[0] === lastEntry);
-                }
-                renderBoard();
-                updateHUD();
-
-                gameoverStats.innerHTML =
+                const token = ++gameOverToken;
+                const statsHTML = () =>
                     `PONTOS: ${formatScore(score)}<br>${stageLabel()}<br>RECORDE: ${formatScore(highScore)}`;
-                if (lastEntry) showNameEntry(isNew);
-                else screenGameover.classList.remove('hidden');
+                updateHUD();
+                gameoverStats.innerHTML = statsHTML();
+                screenGameover.classList.remove('hidden');
+
+                // consulta o placar e, se a pontuação entrou no top 10, pede o nome
+                const decide = () => {
+                    if (token !== gameOverToken || gameState !== 'GAMEOVER') return;
+                    gameoverStats.innerHTML = statsHTML();
+                    renderBoard();
+                    if (qualifiesForBoard(pendingScore)) {
+                        const isNew = !board.length || pendingScore > board[0].s;
+                        screenGameover.classList.add('hidden');
+                        showNameEntry(isNew);
+                    }
+                };
+                if (useGlobalBoard()) refreshBoard().then(decide);
+                else {
+                    board = loadBoard();
+                    decide();
+                }
             }
 
             // [NOVO] Perde uma vida; só termina o jogo quando as vidas acabam
@@ -2348,7 +2586,7 @@
                 if (soundEnabled) sfx.menu();
             });
 
-            board = loadBoard();
+            refreshBoard();
             renderBoard();
             updateHUD();
             updateMenuUI();
