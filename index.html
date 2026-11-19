@@ -297,7 +297,7 @@
             padding: 6px;
             box-shadow: inset 0 0 18px rgba(0, 210, 255, 0.10);
             font-family: 'Press Start 2P', monospace;
-            touch-action: none;
+            touch-action: none; /* permite deslizar na tela sem rolar a página */
         }
 
         .lcd-hud {
@@ -389,6 +389,7 @@
             cursor: pointer;
         }
 
+        /* Controles: direcional à esquerda, botões de ação à direita */
         .controls {
             display: flex;
             justify-content: space-between;
@@ -509,10 +510,12 @@
             text-align: center;
         }
 
+        /* [NOVO] Ajustes para celular */
         body.snake-open { overflow: hidden; }
         @media (max-height: 720px) { .snake-modal-wrapper { zoom: 0.85; } }
         @media (max-height: 620px) { .snake-modal-wrapper { zoom: 0.72; } }
 
+        /* Barra de progresso da fase */
         .lcd-phase {
             display: flex;
             align-items: center;
@@ -536,6 +539,7 @@
             transition: width 0.25s ease-out;
         }
 
+        /* ---- v3: layout com placar, abertura, estados ---- */
         #snake-modal-overlay { align-items: flex-start; }
         .snake-modal-wrapper { margin: auto; }
         .snake-layout { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 18px; width: 100%; }
@@ -642,6 +646,7 @@
             to { opacity: 1; transform: none; filter: none; }
         }
 
+        /* Telas de aviso dentro do jogo (fase / pronto): quase transparentes para ver a cobra e os obstáculos */
         .lcd-overlay.soft { background: rgba(6, 20, 27, 0.22); }
         .lcd-overlay.soft .lcd-title,
         .lcd-overlay.soft .lcd-sub {
@@ -671,8 +676,9 @@
 
                 <div class="card">
                     <div class="viewer-wrap">
+                        <!-- data-sources: este arquivo (>25 MB) fica apenas no release "hausmann" (não está na pasta modelos). Se o GitHub Releases bloquear o carregamento direto no visualizador, o usuário ainda pode baixar pelo botão abaixo. -->
                         <model-viewer
-                            data-sources="modelos/Predio_Haussmann_David_Duque_DKB.glb | https://github.com/david-duqueq/portifolio3d/releases/download/hausmann/Predio_Haussmann_David_Duque_DKB.glb"
+                            data-sources="https://github.com/david-duqueq/portifolio3d/releases/download/hausmann/Predio_Haussmann_David_Duque_DKB.glb"
                             alt="Prédio Haussmann 3D"
                             camera-controls
                             auto-rotate
@@ -691,7 +697,7 @@
                             <button type="button" data-act="full" title="Tela cheia" aria-label="Tela cheia"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></button>
                         </div>
                         <div class="viewer-hint">Arraste para girar &middot; role ou pince para zoom</div>
-                        <div class="viewer-msg" hidden>Não foi possível carregar o visualizador deste modelo. Você ainda pode baixar o arquivo pelo botão abaixo.</div>
+                        <div class="viewer-msg" hidden>Não foi possível carregar o visualizador deste modelo (+25 MB no release). Você ainda pode baixar o arquivo pelo botão abaixo.</div>
                     </div>
                     <div class="card-body">
                         <div>
@@ -704,8 +710,9 @@
 
                 <div class="card">
                     <div class="viewer-wrap">
+                        <!-- data-sources: o visualizador tenta cada endereço, na ordem (separados por | ): 1) versão leve "_preview" na pasta modelos, 2) arquivo completo na pasta modelos, 3) link do release. O botão de baixar sempre usa o arquivo completo do release. -->
                         <model-viewer
-                            data-sources="modelos/DKB_dbk_loog.glb | https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb"
+                            data-sources="modelos/DKB_logo_preview.glb | modelos/DKB_dbk_loog.glb | https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb"
                             alt="Logo DKB 3D"
                             camera-controls
                             auto-rotate
@@ -737,8 +744,9 @@
 
                 <div class="card">
                     <div class="viewer-wrap">
+                        <!-- data-sources: o visualizador tenta cada endereço, na ordem (separados por | ): 1) versão leve "_preview" na pasta modelos, 2) arquivo completo na pasta modelos, 3) link do release. O botão de baixar sempre usa o arquivo completo do release. -->
                         <model-viewer
-                            data-sources="modelos/lulis-fazOLporha.glb | https://github.com/david-duqueq/portifolio3d/releases/download/lulis-fazOLporha/lulis-fazOLporha.glb"
+                            data-sources="modelos/lulis-fazOLporha_preview.glb | modelos/lulis-fazOLporha.glb | https://github.com/david-duqueq/portifolio3d/releases/download/lulis-fazOLporha/lulis-fazOLporha.glb"
                             alt="Modelo 3D lulis-fazOLporha"
                             camera-controls
                             auto-rotate
@@ -1081,6 +1089,7 @@
                         { x: 10, y: 9 }, { x: 11, y: 9 }, { x: 12, y: 9 }, { x: 13, y: 9 }, { x: 14, y: 9 }, { x: 15, y: 9 }, { x: 16, y: 9 }
                     ]
                 },
+                // [NOVO] Labirinto PILARES
                 {
                     name: 'PILARES',
                     walls: [
@@ -1090,6 +1099,7 @@
                         { x: 14, y: 8 }, { x: 15, y: 8 }, { x: 14, y: 9 }, { x: 15, y: 9 }
                     ]
                 },
+                // [NOVO] Labirinto DIVISA
                 {
                     name: 'DIVISA',
                     walls: (() => {
@@ -1099,6 +1109,7 @@
                         return w;
                     })()
                 },
+                // [NOVO] Labirinto ZIGUE
                 {
                     name: 'ZIGUE',
                     walls: (() => {
@@ -1110,6 +1121,15 @@
                 }
             ];
 
+            // =====================================================================
+            //  MODOS DE JOGO (aparecem no menu, na ordem abaixo)
+            //   LIVRE    -> campo sem paredes, sem fases (só a velocidade sobe)
+            //   DESAFIO  -> começa no LIVRE, passa pelos 6 labirintos e depois
+            //               pelas 6 fases de blocos soltos (a última não acaba)
+            //   CAIXA, TUNEL, ESPIRAL, PILARES, DIVISA, ZIGUE -> só aquele labirinto
+            //  "maze" = posição na lista MAZES (0 livre, 1 caixa, 2 túnel, 3 espiral,
+            //  4 pilares, 5 divisa, 6 zigue). "blocks" = blocos soltos no campo.
+            // =====================================================================
             const CHALLENGE_STAGES = [];
             [0, 1, 2, 3, 4, 5, 6].forEach(m => CHALLENGE_STAGES.push({ name: MAZES[m].name, maze: m, blocks: 0 }));
             for (let b = 1; b <= 6; b++) CHALLENGE_STAGES.push({ name: 'BLOCOS ' + b, maze: 0, blocks: b * 2, final: b === 6 });
@@ -1147,15 +1167,19 @@
             let moveTimer = null;
             let soundEnabled = true;
 
+            // [NOVO] Vidas, efeito de lentidão, ranking e vibração
             let lives = 3;
             let slowTicks = 0;
             const RANK_KEY = 'dkb_snake_rank';
 
-            const PHASE_GOAL_MULT = 2;
-            const PHASE_GOAL_BASE = 12;
+            // =====================================================================
+            //  CONFIGURAÇÕES DO JOGO (1/2): FASES E DIFICULDADE
+            // =====================================================================
+            const PHASE_GOAL_MULT = 2;         // dobro de pontos para passar de fase
+            const PHASE_GOAL_BASE = 12;        // meta = velocidade x MULT x (BASE + STEP x fase)
             const PHASE_GOAL_STEP = 3;
-            const PHASE_SPEEDUP = 0.96;
-            const MIN_INTERVAL = 55;
+            const PHASE_SPEEDUP = 0.96;        // cada fase deixa a cobra ~4% mais rápida
+            const MIN_INTERVAL = 55;           // limite de velocidade (ms por passo)
             const MAX_LIVES = 5;
             const BOARD_KEY = 'dkb_snake_board';
             const BOARD_SIZE = 10;
@@ -1163,8 +1187,8 @@
             let phaseStartScore = 0;
             let extraWalls = [];
             let pauseIndex = 0;
-            let menuMode = 1;
-            let currentMode = MODES[1];
+            let menuMode = 1;                  // modo escolhido no menu (1 = DESAFIO)
+            let currentMode = MODES[1];        // modo da partida em andamento
             let stageList = currentMode.stages;
             let suspended = false;
             let suspendedLevel = 7;
@@ -1177,16 +1201,38 @@
                 try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
             }
 
+            // =====================================================================
+            //  CONFIGURAÇÕES DO JOGO (2/2): ITENS ESPECIAIS E CÓDIGOS SECRETOS
+            //
+            //  COMO USAR OS CÓDIGOS: durante a partida, digite os números do
+            //  teclado em sequência (ex.: 1 1 1). O item aparece na hora no campo
+            //  e FICA lá até a cobra comê-lo (não some com o tempo).
+            //  Para trocar um código, mude o valor de "code" na tabela abaixo.
+            //  Regras: só números (as letras são usadas nos controles) e nenhum
+            //  código pode terminar com outro código (ex.: não use "11" e "111").
+            //  Os códigos não funcionam no menu nem no celular (precisa de teclado).
+            // =====================================================================
+
+            // Itens que aparecem sozinhos: duração em "passos" da cobra
+            // duração = maior entre BONUS_TICKS_MIN e (BONUS_TICKS_BASE - fase x BONUS_TICKS_PER_PHASE)
             const BONUS_TICKS_BASE = 46;
             const BONUS_TICKS_MIN = 24;
             const BONUS_TICKS_PER_PHASE = 2;
 
-            const SLOW_STEPS = 25;
-            const SHRINK_AMOUNT = 4;
-            const SNAKE_MIN_LENGTH = 4;
-            const CODE_TIMEOUT_MS = 2000;
-            const SECRET_ITEM_GIVES_POINTS = false;
+            const SLOW_STEPS = 25;                  // quantos passos a cobra fica lenta (item 🐢)
+            const SHRINK_AMOUNT = 4;                // quantos segmentos o item ✂️ remove
+            const SNAKE_MIN_LENGTH = 4;             // a cobra nunca fica menor que isso
+            const CODE_TIMEOUT_MS = 2000;           // tempo máximo entre uma tecla e outra do código
+            const SECRET_ITEM_GIVES_POINTS = false; // item criado por código dá pontos? (false = só o efeito)
 
+            // TABELA DOS ITENS ESPECIAIS
+            //  type       -> nome interno (não mude)
+            //  icon       -> figura mostrada no painel (HUD)
+            //  code       -> CÓDIGO SECRETO que faz o item aparecer na hora
+            //  weight     -> chance de aparecer sozinho (quanto maior, mais comum)
+            //  pointsMult -> multiplicador dos pontos ao comer (2 = dobro)
+            //  desc       -> o que o item faz
+            //  effect     -> função executada quando a cobra come o item (opcional)
             const BONUS_ITEMS = [
                 { type: 'frog',   icon: '🐸', code: '111', weight: 15, pointsMult: 1,
                   desc: '+1 vida (limite: MAX_LIVES)',
@@ -1206,6 +1252,7 @@
                   desc: 'Pontos normais' }
             ];
 
+            // Mapa código -> item (montado a partir da tabela acima; não precisa mexer)
             const SECRET_CODES = {};
             BONUS_ITEMS.forEach(it => {
                 if (SECRET_CODES[it.code]) console.warn('Código repetido na tabela BONUS_ITEMS:', it.code);
@@ -1214,10 +1261,28 @@
             let codeBuffer = '';
             let codeLastTime = 0;
 
-            const GLOBAL_BOARD_URL = '';
+            // =====================================================================
+            //  CONFIGURAÇÕES DO JOGO (3/3): PLACAR GLOBAL (um placar para todos)
+            //
+            //  Para todos os visitantes verem o MESMO placar, cole abaixo o endereço
+            //  do seu Firebase Realtime Database. Deixe '' (vazio) para usar só o
+            //  placar local, que fica guardado no navegador de cada pessoa.
+            //
+            //  Passo a passo (plano gratuito):
+            //   1. Acesse console.firebase.google.com e crie um projeto
+            //   2. Menu "Build" -> "Realtime Database" -> "Criar banco de dados"
+            //      (escolha "modo bloqueado")
+            //   3. Aba "Regras": apague tudo, cole o conteúdo do arquivo
+            //      placar-regras-firebase.json e clique em "Publicar"
+            //   4. Aba "Dados": copie o endereço que aparece no topo
+            //      (https://....firebaseio.com) e cole em GLOBAL_BOARD_URL
+            //  Se o endereço estiver errado ou fora do ar, o jogo usa o placar local.
+            // =====================================================================
+            const GLOBAL_BOARD_URL = '';    // ex.: 'https://meu-projeto-default-rtdb.firebaseio.com'
             const GLOBAL_BOARD_PATH = 'board';
-            const BOARD_TIMEOUT_MS = 4000;
+            const BOARD_TIMEOUT_MS = 4000;  // tempo máximo de espera pela internet
 
+            // --- Áudio 8-bit ---
             let audioCtx = null;
             function playTone(freq, duration, type = 'square', delay = 0) {
                 if (!soundEnabled || !isModalOpen) return;
@@ -1281,7 +1346,7 @@
             }
 
             function updateHUD() {
-                hudScore.textContent = formatScore(score) + ' ♥' + lives;
+                hudScore.textContent = formatScore(score) + ' ♥' + lives; // [NOVO] mostra as vidas
                 hudHi.textContent = 'HI:' + formatScore(highScore);
                 const stNow = stageList[phase - 1] || stageList[0];
                 phaseLabel.textContent = currentMode.campaign ? ('F' + phase + ' ' + stNow.name) : ('MODO ' + currentMode.name);
@@ -1314,6 +1379,7 @@
                 }
             }
 
+            // [NOVO] Velocidade progressiva: acelera até 30% conforme come
             function currentInterval() {
                 const base = LEVEL_SPEEDS[level] || 135;
                 const boost = 1 - Math.min(foodsEaten, 30) * 0.01;
@@ -1326,12 +1392,14 @@
                 moveTimer = setInterval(gameStep, currentInterval());
             }
 
+            // --- Estados: aguardar tecla, continuar jogo, fases ---
             function enterReady() {
                 gameState = 'READY';
                 readyLockUntil = Date.now() + 350;
                 screenReady.classList.remove('hidden');
             }
 
+            // Qualquer tecla ou toque inicia (ou retoma após pausa / passar de fase)
             function beginPlay() {
                 if (gameState !== 'READY' && gameState !== 'PHASE') return false;
                 if (Date.now() < readyLockUntil) return false;
@@ -1342,14 +1410,17 @@
                 return true;
             }
 
+            // Texto do modo/fase atual (pausa e fim de jogo)
             function stageLabel() {
                 return currentMode.campaign ? ('FASE ' + phase + ' ' + stageList[phase - 1].name) : ('MODO ' + currentMode.name);
             }
 
+            // Etiqueta mostrada no placar: F3 (fase do desafio) ou sigla do modo
             function boardTag() {
                 return currentMode.campaign ? ('F' + phase) : currentMode.tag;
             }
 
+            // Códigos secretos: acompanha os números digitados em sequência
             function trackSecretCode(key) {
                 if (['shift', 'control', 'alt', 'meta'].includes(key)) return;
                 if (!/^[0-9]$/.test(key)) { codeBuffer = ''; return; }
@@ -1381,6 +1452,7 @@
                 inputQueue = [];
             }
 
+            // Aplica o labirinto e os blocos soltos da fase atual
             function applyStage() {
                 const st = stageList[phase - 1];
                 mazeIndex = st.maze;
@@ -1393,6 +1465,7 @@
                 }
             }
 
+            // --- Menu (itens visíveis: continuar, novo jogo, velocidade, fase) ---
             function menuItems() {
                 return Array.from(menuOptions).filter(o => o.style.display !== 'none');
             }
@@ -1442,6 +1515,7 @@
                 enterReady();
             }
 
+            // --- Abertura: logo em pixel ---
             const introEl = document.getElementById('logo-intro');
             const introCanvas = document.getElementById('intro-canvas');
             const introCtx = introCanvas.getContext('2d');
@@ -1467,6 +1541,7 @@
                 B: ['11110', '10001', '10001', '11110', '10001', '10001', '11110']
             };
 
+            // Plano B: "DKB" em pixel art (usado se o DKB.png não carregar)
             function fallbackLogoCells() {
                 const cells = [];
                 const S = 3, gap = 4, word = 'DKB';
@@ -1489,6 +1564,7 @@
                 return cells;
             }
 
+            // Logo real (DKB.png) convertida em pixels; devolve null se não for possível
             function realLogoCells() {
                 if (!logoReady || !logoImg.naturalWidth) return null;
                 try {
@@ -1613,11 +1689,12 @@
 
             introEl.addEventListener('click', skipIntro);
 
+            // --- Abrir / Fechar Modal Easter Egg ---
             function openSnakeModal() {
                 isModalOpen = true;
                 modalOverlay.classList.add('active');
                 modalOverlay.setAttribute('aria-hidden', 'false');
-                document.body.classList.add('snake-open');
+                document.body.classList.add('snake-open'); // [NOVO] trava a rolagem da página
                 showMenu();
                 startIntro();
                 refreshBoard();
@@ -1629,7 +1706,7 @@
                 stopIntro();
                 modalOverlay.classList.remove('active');
                 modalOverlay.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('snake-open');
+                document.body.classList.remove('snake-open'); // [NOVO]
             }
 
             trigger.addEventListener('click', openSnakeModal);
@@ -1640,10 +1717,11 @@
                 }
             });
 
+            // [NOVO] Controle por deslize (swipe) na tela LCD
             (function setupSwipe() {
                 const lcdBox = document.querySelector('.lcd-container');
                 let start = null;
-                const MIN = 24;
+                const MIN = 24; // distância mínima (px) para contar como deslize
 
                 lcdBox.addEventListener('touchstart', (e) => {
                     const t = e.changedTouches[0];
@@ -1684,6 +1762,7 @@
                 return false;
             }
 
+            // Obstáculos isolados (1 bloco) que nascem longe da cabeça e fora da linha de respawn
             function addPhaseWalls(want) {
                 const head = snake[0];
                 let placed = 0;
@@ -1724,6 +1803,7 @@
                 }
             }
 
+            // [NOVO] Sorteio de bônus com pesos diferentes
             function pickBonus() {
                 const total = BONUS_ITEMS.reduce((a, b) => a + b.weight, 0);
                 let r = Math.random() * total;
@@ -1734,6 +1814,7 @@
                 return BONUS_ITEMS[0];
             }
 
+            // forced = item da tabela BONUS_ITEMS criado por código secreto (não some com o tempo)
             function spawnBonus(forced) {
                 let attempts = 0;
                 while (attempts < 400) {
@@ -1772,7 +1853,7 @@
                 score = 0;
                 foodsEaten = 0;
                 bonus = null;
-                lives = 3;
+                lives = 3;      // [NOVO]
                 slowTicks = 0;
                 suspended = false;
                 currentMode = MODES[menuMode];
@@ -1848,6 +1929,7 @@
                 });
             }
 
+            // 0 = continuar, 1 = reiniciar partida, 2 = voltar ao menu
             function pauseAction(i) {
                 if (i === 0) togglePause();
                 else if (i === 1) startGame();
@@ -1864,6 +1946,7 @@
                 phaseStartScore = score;
                 const st = stageList[phase - 1];
                 resetSnake();
+                // item criado por código secreto não some: volta em outro lugar da nova fase
                 const keepItem = (bonus && bonus.perm) ? BONUS_ITEMS.find(b => b.type === bonus.type) : null;
                 bonus = null;
                 slowTicks = 0;
@@ -1884,6 +1967,9 @@
                 draw();
             }
 
+            // =====================================================================
+            //  PLACAR (top 10): global (Firebase) ou local (só neste navegador)
+            // =====================================================================
             let boardMode = 'local';
             let boardLoading = false;
             let pendingScore = 0;
@@ -1910,6 +1996,7 @@
                     .slice(0, BOARD_SIZE);
             }
 
+            // Placar local (localStorage)
             function loadBoard() {
                 try {
                     const b = JSON.parse(localStorage.getItem(BOARD_KEY) || '[]');
@@ -1917,6 +2004,7 @@
                 } catch (e) { return []; }
             }
 
+            // Atualiza a variável "board". Devolve uma Promise (já resolvida no modo local).
             function refreshBoard() {
                 if (!useGlobalBoard()) {
                     board = loadBoard();
@@ -1983,6 +2071,7 @@
                 return sc > 0 && (board.length < BOARD_SIZE || sc > board[board.length - 1].s);
             }
 
+            // Envia a pontuação: global se configurado; se falhar, guarda no placar local
             function submitEntry(entry) {
                 const saveLocal = () => {
                     const list = loadBoard();
@@ -2028,6 +2117,7 @@
                 submitEntry({ n: raw || 'ANONIMO', s: pendingScore, t: pendingTag, d: Date.now() });
             }
 
+            // [NOVO] Fim de jogo de verdade (antiga triggerGameOver)
             function finishGame() {
                 stopMoveLoop();
                 gameState = 'GAMEOVER';
@@ -2047,6 +2137,7 @@
                 gameoverStats.innerHTML = statsHTML();
                 screenGameover.classList.remove('hidden');
 
+                // consulta o placar e, se a pontuação entrou no top 10, pede o nome
                 const decide = () => {
                     if (token !== gameOverToken || gameState !== 'GAMEOVER') return;
                     gameoverStats.innerHTML = statsHTML();
@@ -2064,6 +2155,7 @@
                 }
             }
 
+            // [NOVO] Perde uma vida; só termina o jogo quando as vidas acabam
             function triggerGameOver() {
                 stopMoveLoop();
                 lives--;
@@ -2120,6 +2212,7 @@
                 if (ny < 0) ny = ROWS - 1;
                 if (ny >= ROWS) ny = 0;
 
+                const walls = MAZES[mazeIndex].walls;
                 if (isWall(nx, ny)) {
                     triggerGameOver();
                     return;
@@ -2143,9 +2236,9 @@
                     score += level;
                     foodsEaten++;
                     sfx.eat();
-                    buzz(10);
+                    buzz(10); // [NOVO]
                     spawnFood();
-                    if (foodsEaten % 5 === 0) startMoveLoop();
+                    if (foodsEaten % 5 === 0) startMoveLoop(); // [NOVO] acelera a cada 5 comidas
                     if (foodsEaten % 5 === 0 && !bonus) {
                         spawnBonus();
                     }
@@ -2154,6 +2247,7 @@
                     sfx.move();
                 }
 
+                // [NOVO] Cada bônus tem um efeito diferente
                 if (ateBonus) {
                     const item = BONUS_ITEMS.find(b => b.type === bonus.type);
                     let pts = 0;
@@ -2175,6 +2269,7 @@
                     }
                 }
 
+                // [NOVO] Fim do efeito de lentidão
                 if (slowTicks > 0) {
                     slowTicks--;
                     if (slowTicks === 0) startMoveLoop();
@@ -2192,6 +2287,7 @@
                 if (leveledUp) advancePhase();
             }
 
+            // --- Renderização ---
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -2326,6 +2422,7 @@
                 }
             }
 
+            // --- Controles de Teclado (ativos apenas quando o Modal está aberto) ---
             window.addEventListener('keydown', (e) => {
                 if (!isModalOpen) return;
 
@@ -2514,6 +2611,7 @@
 
             document.getElementById('btn-name-save').addEventListener('click', saveName);
 
+            // Toque na tela do jogo também inicia (qualquer tecla / toque)
             document.querySelector('.lcd-container').addEventListener('click', () => {
                 if (gameState === 'READY' || gameState === 'PHASE') beginPlay();
             });
