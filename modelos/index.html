@@ -11,6 +11,7 @@
     :root { color-scheme: dark; --bg: #121214; --card: #1e1e24; --accent: #2ee86f; --text: #f4f4f6; --muted: #a0a0ab; --border: #2a2a32; }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55; }
+    body.viewer-full { overflow: hidden; }
     header { padding: 2.5rem 1rem 2rem; text-align: center; background: linear-gradient(180deg, #1a1a22, var(--bg)); border-bottom: 1px solid var(--border); }
     header a { color: var(--accent); text-decoration: none; }
     h1 { margin: 0 0 .4rem; font-size: clamp(2rem, 5vw, 3rem); }
@@ -18,12 +19,15 @@
     main { width: min(1200px, 100%); margin: auto; padding: 2rem 1rem; }
     .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.25rem; color: var(--muted); }
     .toolbar input { width: min(100%, 340px); padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font: inherit; }
-    .toolbar input:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .toolbar input:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; }
     .card { min-width: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
-    .preview { position: relative; height: 230px; background: #16161b; }
+    .preview { position: relative; height: 250px; background: #16161b; }
     .preview model-viewer { width: 100%; height: 100%; --poster-color: transparent; --progress-bar-color: var(--accent); }
-    .preview-note { position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; color: var(--muted); text-align: center; }
+    .viewer-tools { position: absolute; z-index: 1; top: .6rem; right: .6rem; display: flex; flex-direction: column; gap: .4rem; }
+    .viewer-tools button { width: 36px; height: 36px; border: 1px solid #44444f; border-radius: 8px; background: #1e1e24e8; color: var(--text); font: inherit; font-size: 1.2rem; cursor: pointer; }
+    .viewer-tools button:hover, .viewer-tools button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+    .preview-note { position: absolute; z-index: 2; inset: 0; display: grid; place-items: center; padding: 1rem; color: var(--muted); text-align: center; background: #16161b; }
     .preview-note[hidden] { display: none; }
     .details { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1rem; }
     h2 { overflow-wrap: anywhere; margin: 0 0 .35rem; font-size: 1rem; }
@@ -32,6 +36,7 @@
     .download:hover { filter: brightness(.9); }
     .message { padding: 2rem 1rem; color: var(--muted); text-align: center; }
     footer { padding: 2rem 1rem; color: var(--muted); text-align: center; font-size: .9rem; }
+    .preview.is-full { position: fixed; inset: 0; z-index: 9000; width: 100%; height: 100%; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
   </style>
 </head>
@@ -49,7 +54,7 @@
     <section class="grid" id="models" aria-label="Modelos disponíveis"></section>
     <p class="message" id="message" role="status"></p>
   </main>
-  <footer>Os arquivos são carregados diretamente deste repositório. Modelos GLB podem ser visualizados; outros formatos ficam disponíveis para download.</footer>
+  <footer>Os arquivos são carregados diretamente deste repositório. Modelos GLB podem ser visualizados em 3D; outros formatos ficam disponíveis para download.</footer>
   <script>
     (() => {
       const folderApi = 'https://api.github.com/repos/david-duqueq/portifolio3d/contents/modelos';
@@ -58,6 +63,7 @@
       const message = document.querySelector('#message');
       const search = document.querySelector('#search');
       const cards = [];
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const formatSize = bytes => bytes < 1024 * 1024
         ? `${(bytes / 1024).toFixed(0)} KB`
         : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
@@ -75,16 +81,67 @@
           const viewer = document.createElement('model-viewer');
           viewer.setAttribute('alt', `Visualização 3D de ${file.name}`);
           viewer.setAttribute('camera-controls', '');
-          viewer.setAttribute('auto-rotate', '');
+          if (!reducedMotion) viewer.setAttribute('auto-rotate', '');
           viewer.setAttribute('loading', 'lazy');
+          viewer.setAttribute('touch-action', 'pan-y');
+          viewer.setAttribute('shadow-intensity', '1');
+          viewer.setAttribute('environment-image', 'neutral');
           viewer.setAttribute('interaction-prompt', 'none');
           viewer.dataset.src = file.download_url;
+
+          const tools = document.createElement('div');
+          tools.className = 'viewer-tools';
+          const actions = [
+            ['zoom-in', 'Aproximar', '+'],
+            ['zoom-out', 'Afastar', '−'],
+            ['reset', 'Voltar à posição inicial', '↺'],
+            ['spin', 'Alternar giro automático', '⟳'],
+            ['full', 'Tela cheia', '⛶']
+          ];
+          actions.forEach(([action, label, icon]) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.dataset.act = action;
+            button.title = label;
+            button.setAttribute('aria-label', label);
+            if (action === 'spin') {
+              button.setAttribute('aria-pressed', String(!reducedMotion));
+              if (reducedMotion) button.textContent = icon;
+              else button.classList.add('on');
+            }
+            button.textContent = icon;
+            tools.append(button);
+          });
+
           const note = document.createElement('div');
           note.className = 'preview-note';
           note.textContent = 'Carregando visualização 3D…';
           viewer.addEventListener('load', () => { note.hidden = true; });
           viewer.addEventListener('error', () => { note.textContent = 'Pré-visualização indisponível. O arquivo ainda pode ser baixado.'; });
-          preview.append(viewer, note);
+          tools.addEventListener('click', event => {
+            const button = event.target.closest('button');
+            if (!button) return;
+            const action = button.dataset.act;
+            if (action === 'zoom-in' || action === 'zoom-out') {
+              if (!viewer.loaded) return;
+              const orbit = viewer.getCameraOrbit();
+              const factor = action === 'zoom-in' ? 0.8 : 1.25;
+              viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius * factor}m`;
+            } else if (action === 'reset') {
+              viewer.cameraOrbit = 'auto auto auto';
+              viewer.cameraTarget = 'auto auto auto';
+              viewer.fieldOfView = 'auto';
+            } else if (action === 'spin') {
+              const spinning = !viewer.hasAttribute('auto-rotate');
+              viewer.toggleAttribute('auto-rotate', spinning);
+              button.setAttribute('aria-pressed', String(spinning));
+            } else if (action === 'full') {
+              const fullscreen = preview.classList.toggle('is-full');
+              document.body.classList.toggle('viewer-full', fullscreen);
+              viewer.setAttribute('touch-action', fullscreen ? 'none' : 'pan-y');
+            }
+          });
+          preview.append(viewer, tools, note);
           card.append(preview);
         }
 
@@ -94,7 +151,7 @@
         title.textContent = file.name;
         const meta = document.createElement('p');
         meta.className = 'meta';
-        meta.textContent = `${extension.toUpperCase()} · ${formatSize(file.size)}`;
+        meta.textContent = `${extension.toUpperCase()} · ${formatSize(file.size)}${canPreview ? ' · Visualização 3D' : ' · Download'}`;
         const link = document.createElement('a');
         link.className = 'download';
         link.href = file.download_url;
@@ -119,6 +176,16 @@
         message.textContent = cards.length && !visible ? 'Nenhum modelo corresponde à busca.' : '';
       }
 
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          const fullscreen = document.querySelector('.preview.is-full');
+          if (fullscreen) {
+            fullscreen.classList.remove('is-full');
+            document.body.classList.remove('viewer-full');
+            fullscreen.querySelector('model-viewer').setAttribute('touch-action', 'pan-y');
+          }
+        }
+      });
       search.addEventListener('input', filterCards);
       fetch(folderApi, { headers: { Accept: 'application/vnd.github+json' } })
         .then(response => {
