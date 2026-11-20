@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121214">
+  <meta name="description" content="Explore e baixe os modelos 3D de David Duque.">
+  <title>Modelos 3D — David Duque</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <style>
+    :root { color-scheme: dark; --bg: #121214; --card: #1e1e24; --accent: #2ee86f; --text: #f4f4f6; --muted: #a0a0ab; --border: #2a2a32; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55; }
+    header { padding: 2.5rem 1rem 2rem; text-align: center; background: linear-gradient(180deg, #1a1a22, var(--bg)); border-bottom: 1px solid var(--border); }
+    header a { color: var(--accent); text-decoration: none; }
+    h1 { margin: 0 0 .4rem; font-size: clamp(2rem, 5vw, 3rem); }
+    header p { margin: 0; color: var(--muted); }
+    main { width: min(1200px, 100%); margin: auto; padding: 2rem 1rem; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.25rem; color: var(--muted); }
+    .toolbar input { width: min(100%, 340px); padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font: inherit; }
+    .toolbar input:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; }
+    .card { min-width: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+    .preview { position: relative; height: 230px; background: #16161b; }
+    .preview model-viewer { width: 100%; height: 100%; --poster-color: transparent; --progress-bar-color: var(--accent); }
+    .preview-note { position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; color: var(--muted); text-align: center; }
+    .preview-note[hidden] { display: none; }
+    .details { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1rem; }
+    h2 { overflow-wrap: anywhere; margin: 0 0 .35rem; font-size: 1rem; }
+    .meta { margin: 0 0 1rem; color: var(--muted); font-size: .82rem; }
+    .download { display: inline-block; margin-top: auto; padding: .65rem .9rem; border-radius: 7px; background: var(--accent); color: #07110a; font-weight: 750; text-decoration: none; }
+    .download:hover { filter: brightness(.9); }
+    .message { padding: 2rem 1rem; color: var(--muted); text-align: center; }
+    footer { padding: 2rem 1rem; color: var(--muted); text-align: center; font-size: .9rem; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Modelos 3D</h1>
+    <p>Visualize e baixe os modelos disponíveis.</p>
+    <p><a href="../">Voltar ao portfólio</a></p>
+  </header>
+  <main>
+    <div class="toolbar">
+      <span id="count" aria-live="polite">Carregando modelos…</span>
+      <label><span hidden>Buscar modelo</span><input id="search" type="search" placeholder="Buscar modelo…" aria-label="Buscar modelo"></label>
+    </div>
+    <section class="grid" id="models" aria-label="Modelos disponíveis"></section>
+    <p class="message" id="message" role="status"></p>
+  </main>
+  <footer>Os arquivos são carregados diretamente deste repositório. Modelos GLB podem ser visualizados; outros formatos ficam disponíveis para download.</footer>
+  <script>
+    (() => {
+      const folderApi = 'https://api.github.com/repos/david-duqueq/portifolio3d/contents/modelos';
+      const grid = document.querySelector('#models');
+      const count = document.querySelector('#count');
+      const message = document.querySelector('#message');
+      const search = document.querySelector('#search');
+      const cards = [];
+      const formatSize = bytes => bytes < 1024 * 1024
+        ? `${(bytes / 1024).toFixed(0)} KB`
+        : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+
+      function makeCard(file) {
+        const extension = file.name.split('.').pop().toLowerCase();
+        const canPreview = extension === 'glb';
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.dataset.name = file.name.toLocaleLowerCase('pt-BR');
+
+        if (canPreview) {
+          const preview = document.createElement('div');
+          preview.className = 'preview';
+          const viewer = document.createElement('model-viewer');
+          viewer.setAttribute('alt', `Visualização 3D de ${file.name}`);
+          viewer.setAttribute('camera-controls', '');
+          viewer.setAttribute('auto-rotate', '');
+          viewer.setAttribute('loading', 'lazy');
+          viewer.setAttribute('interaction-prompt', 'none');
+          viewer.dataset.src = file.download_url;
+          const note = document.createElement('div');
+          note.className = 'preview-note';
+          note.textContent = 'Carregando visualização 3D…';
+          viewer.addEventListener('load', () => { note.hidden = true; });
+          viewer.addEventListener('error', () => { note.textContent = 'Pré-visualização indisponível. O arquivo ainda pode ser baixado.'; });
+          preview.append(viewer, note);
+          card.append(preview);
+        }
+
+        const details = document.createElement('div');
+        details.className = 'details';
+        const title = document.createElement('h2');
+        title.textContent = file.name;
+        const meta = document.createElement('p');
+        meta.className = 'meta';
+        meta.textContent = `${extension.toUpperCase()} · ${formatSize(file.size)}`;
+        const link = document.createElement('a');
+        link.className = 'download';
+        link.href = file.download_url;
+        link.download = file.name;
+        link.rel = 'noopener';
+        link.textContent = 'Baixar arquivo';
+        details.append(title, meta, link);
+        card.append(details);
+        cards.push(card);
+        grid.append(card);
+      }
+
+      function filterCards() {
+        const term = search.value.trim().toLocaleLowerCase('pt-BR');
+        let visible = 0;
+        for (const card of cards) {
+          const show = card.dataset.name.includes(term);
+          card.hidden = !show;
+          if (show) visible++;
+        }
+        count.textContent = `${visible} de ${cards.length} modelos`;
+        message.textContent = cards.length && !visible ? 'Nenhum modelo corresponde à busca.' : '';
+      }
+
+      search.addEventListener('input', filterCards);
+      fetch(folderApi, { headers: { Accept: 'application/vnd.github+json' } })
+        .then(response => {
+          if (!response.ok) throw new Error(`GitHub API respondeu ${response.status}`);
+          return response.json();
+        })
+        .then(files => {
+          const models = files
+            .filter(file => file.type === 'file' && /\.(glb|fbx)$/i.test(file.name))
+            .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+          models.forEach(makeCard);
+          if (!models.length) throw new Error('Nenhum arquivo GLB ou FBX foi encontrado na pasta modelos.');
+          filterCards();
+          if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(entries => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const viewer = entry.target;
+                  viewer.setAttribute('src', viewer.dataset.src);
+                  observer.unobserve(viewer);
+                }
+              });
+            }, { rootMargin: '250px' });
+            grid.querySelectorAll('model-viewer').forEach(viewer => observer.observe(viewer));
+          } else {
+            grid.querySelectorAll('model-viewer').forEach(viewer => viewer.setAttribute('src', viewer.dataset.src));
+          }
+        })
+        .catch(error => {
+          count.textContent = 'Não foi possível carregar a lista de modelos.';
+          message.textContent = `${error.message}. Tente novamente mais tarde.`;
+        });
+    })();
+  </script>
+</body>
+</html>
