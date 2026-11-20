@@ -30,7 +30,68 @@
     <!-- Script do Google Model Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <!-- Fonte retrô para o Easter Egg DKB Arcade -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://ajax.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"></noscript>
+    <meta name="color-scheme" content="dark">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://david-duqueq.github.io/portifolio3d/#site",
+      "url": "https://david-duqueq.github.io/portifolio3d/",
+      "name": "David Duque - Portfólio 3D & Devlog",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://david-duqueq.github.io/portifolio3d/#david"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://david-duqueq.github.io/portifolio3d/#david",
+      "name": "David Duque",
+      "alternateName": "DKB",
+      "url": "https://david-duqueq.github.io/portifolio3d/",
+      "image": "https://david-duqueq.github.io/portifolio3d/DKB.png",
+      "jobTitle": "Artista 3D e desenvolvedor indie",
+      "email": "davidduqueq@gmail.com",
+      "sameAs": [
+        "https://www.youtube.com/@davidstudio_1690",
+        "https://www.instagram.com/dkb.david/",
+        "https://www.facebook.com/DKB.dvid/"
+      ]
+    },
+    {
+      "@type": "3DModel",
+      "name": "Prédio Haussmann",
+      "description": "Modelo 3D detalhado no estilo arquitetônico Haussmanniano, pronto para uso em jogos.",
+      "encodingFormat": "model/gltf-binary",
+      "contentUrl": "https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb",
+      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "isAccessibleForFree": true,
+      "creator": {
+        "@id": "https://david-duqueq.github.io/portifolio3d/#david"
+      }
+    },
+    {
+      "@type": "3DModel",
+      "name": "Logo DKB 3D",
+      "description": "Modelo tridimensional da identidade visual DKB.",
+      "encodingFormat": "model/gltf-binary",
+      "contentUrl": "https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb",
+      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "isAccessibleForFree": true,
+      "creator": {
+        "@id": "https://david-duqueq.github.io/portifolio3d/#david"
+      }
+    }
+  ]
+}
+    </script>
     <style>
         :root {
             --bg-color: #121214;
@@ -693,18 +754,28 @@
         .btn-round.secondary { color: var(--btn-green); }
         .key-btn { color: var(--btn-green); }
         .key-btn:active, .key-btn.pressed { color: var(--btn-green-light); }
+
+        /* Respeita quem pede menos movimento no sistema (acessibilidade) */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="DKB.png" alt="Logo DKB" class="logo">
+        <img src="DKB.png" alt="Logo DKB" class="logo" decoding="async">
         <h1><span id="easter-egg-trigger" title="Clique para jogar">David Duque</span> - Portfólio 3D</h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
         <div class="social-links">
-            <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank">YouTube</a>
-            <a href="https://www.instagram.com/dkb.david/" target="_blank">Instagram</a>
-            <a href="https://www.facebook.com/DKB.dvid/" target="_blank">Facebook</a>
+            <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="https://www.instagram.com/dkb.david/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.facebook.com/DKB.dvid/" target="_blank" rel="noopener noreferrer">Facebook</a>
             <a href="mailto:davidduqueq@gmail.com">E-mail</a>
         </div>
     </header>
@@ -724,6 +795,7 @@
                             alt="Prédio Haussmann 3D"
                             camera-controls
                             auto-rotate
+                            loading="lazy"
                             touch-action="pan-y"
                             shadow-intensity="1"
                             environment-image="neutral"
@@ -752,7 +824,7 @@
                                 <!-- Para mostrar mais dados, copie uma linha acima. Ex.: <li><span>Tamanho</span> 38 MB</li> ou <li><span>Polígonos</span> 120 mil</li> -->
                             </ul>
                         </div>
-                        <a href="https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb" class="btn-download" target="_blank">Baixar Modelo (.GLB)</a>
+                        <a href="https://github.com/david-duqueq/portifolio3d/releases/download/5x/Predio_Haussmann_David_Duque_DKB.glb" class="btn-download" target="_blank" rel="noopener">Baixar Modelo (.GLB)</a>
                     </div>
                 </div>
 
@@ -764,6 +836,7 @@
                             alt="Logo DKB 3D"
                             camera-controls
                             auto-rotate
+                            loading="lazy"
                             touch-action="pan-y"
                             shadow-intensity="1"
                             environment-image="neutral"
@@ -792,7 +865,7 @@
                                 <!-- Para mostrar mais dados, copie uma linha acima. Ex.: <li><span>Tamanho</span> 38 MB</li> ou <li><span>Polígonos</span> 120 mil</li> -->
                             </ul>
                         </div>
-                        <a href="https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb" class="btn-download" target="_blank">Baixar Logo (.GLB)</a>
+                        <a href="https://github.com/david-duqueq/portifolio3d/releases/download/dkb/DKB_dbk_loog.glb" class="btn-download" target="_blank" rel="noopener">Baixar Logo (.GLB)</a>
                     </div>
                 </div>
 
@@ -832,6 +905,11 @@
                 const hint = wrap.querySelector('.viewer-hint');
                 const sources = (mv.getAttribute('data-sources') || '').split('|').map(function (s) { return s.trim(); }).filter(Boolean);
                 let idx = 0;
+                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    mv.removeAttribute('auto-rotate');
+                    const spinBtn = wrap.querySelector('[data-act="spin"]');
+                    if (spinBtn) spinBtn.classList.remove('on');
+                }
 
                 function load() {
                     if (idx >= sources.length) { msg.hidden = false; return; }
@@ -2643,8 +2721,8 @@
                 if (soundEnabled) sfx.menu();
             });
 
-            refreshBoard();
-            renderBoard();
+            board = loadBoard();
+            renderBoard();   // o placar global só é consultado quando o jogo é aberto
             updateHUD();
             updateMenuUI();
         })();
