@@ -40,6 +40,13 @@
     .message { padding: 2rem 1rem; color: var(--muted); text-align: center; }
     footer { padding: 2rem 1rem; color: var(--muted); text-align: center; font-size: .9rem; }
     .preview.is-full { position: fixed; inset: 0; z-index: 9000; width: 100%; height: 100%; }
+    .pager { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; margin: 1.75rem 0 .5rem; }
+    .pager[hidden] { display: none; }
+    .pager button { min-width: 44px; height: 44px; padding: 0 .85rem; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font: inherit; font-size: 1rem; cursor: pointer; touch-action: manipulation; }
+    .pager button:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+    .pager button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: #07110a; font-weight: 700; }
+    .pager button:disabled { opacity: .4; cursor: default; }
+    .pager .gap { align-self: center; padding: 0 .15rem; color: var(--muted); }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
   </style>
 </head>
@@ -55,18 +62,26 @@
       <label><span hidden>Buscar modelo</span><input id="search" type="search" placeholder="Buscar modelo…" aria-label="Buscar modelo"></label>
     </div>
     <section class="grid" id="models" aria-label="Modelos disponíveis"></section>
+    <nav class="pager" id="pager" aria-label="Páginas de modelos" hidden></nav>
     <p class="message" id="message" role="status"></p>
   </main>
   <footer>Os arquivos são carregados diretamente deste repositório. Modelos GLB podem ser visualizados em 3D; outros formatos ficam disponíveis para download.</footer>
   <script>
     (() => {
       const folderApi = 'https://api.github.com/repos/david-duqueq/portifolio3d/contents/modelos';
+      const PAGE_SIZE_PHONE = 4; // quantos modelos por página no celular/tablet (no computador mostra todos)
       const grid = document.querySelector('#models');
       const count = document.querySelector('#count');
       const message = document.querySelector('#message');
       const search = document.querySelector('#search');
-      const cards = [];
+      const pager = document.querySelector('#pager');
+      const phoneQuery = window.matchMedia('(max-width: 700px), (pointer: coarse)');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let allFiles = [];
+      let page = 1;
+      let observer = null;
+      let searchTimer = null;
+
       const formatSize = bytes => bytes < 1024 * 1024
         ? `${(bytes / 1024).toFixed(0)} KB`
         : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
@@ -82,7 +97,6 @@
         const cleanTitle = formatTitle(file.name);
         const card = document.createElement('article');
         card.className = 'card';
-        card.dataset.name = `${cleanTitle} ${file.name}`.toLocaleLowerCase('pt-BR');
 
         if (canPreview) {
           const preview = document.createElement('div');
@@ -169,21 +183,96 @@
         link.textContent = 'Baixar arquivo';
         details.append(title, meta, link);
         card.append(details);
-        cards.push(card);
-        grid.append(card);
+        return card;
       }
 
-      function filterCards() {
-        const term = search.value.trim().toLocaleLowerCase('pt-BR');
-        let visible = 0;
-        for (const card of cards) {
-          const show = card.dataset.name.includes(term);
-          card.hidden = !show;
-          if (show) visible++;
+      // Só os modelos visíveis (e perto da tela) começam a baixar
+      function observeViewers() {
+        if (observer) observer.disconnect();
+        const viewers = grid.querySelectorAll('model-viewer');
+        if (!('IntersectionObserver' in window)) {
+          viewers.forEach(viewer => viewer.setAttribute('src', viewer.dataset.src));
+          return;
         }
-        count.textContent = `${visible} de ${cards.length} modelos`;
-        message.textContent = cards.length && !visible ? 'Nenhum modelo corresponde à busca.' : '';
+        observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const viewer = entry.target;
+              viewer.setAttribute('src', viewer.dataset.src);
+              observer.unobserve(viewer);
+            }
+          });
+        }, { rootMargin: phoneQuery.matches ? '80px' : '250px' });
+        viewers.forEach(viewer => observer.observe(viewer));
       }
+
+      // Lista de páginas com reticências: 1 … 4 5 6 … 12
+      function pageList(total, current) {
+        const wanted = new Set([1, total, current - 1, current, current + 1]);
+        const nums = [...wanted].filter(n => n >= 1 && n <= total).sort((a, b) => a - b);
+        const out = [];
+        nums.forEach((n, i) => {
+          if (i && n - nums[i - 1] > 1) out.push('…');
+          out.push(n);
+        });
+        return out;
+      }
+
+      function renderPager(pages) {
+        pager.textContent = '';
+        if (pages <= 1) { pager.hidden = true; return; }
+        pager.hidden = false;
+        const add = (label, target, options = {}) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = label;
+          button.dataset.page = target;
+          button.setAttribute('aria-label', options.aria);
+          if (options.disabled) button.disabled = true;
+          if (options.current) button.setAttribute('aria-current', 'page');
+          pager.append(button);
+        };
+        add('‹', page - 1, { disabled: page === 1, aria: 'Página anterior' });
+        pageList(pages, page).forEach(n => {
+          if (n === '…') {
+            const gap = document.createElement('span');
+            gap.className = 'gap';
+            gap.textContent = '…';
+            pager.append(gap);
+          } else {
+            add(String(n), n, { current: n === page, aria: `Página ${n}` });
+          }
+        });
+        add('›', page + 1, { disabled: page === pages, aria: 'Próxima página' });
+      }
+
+      // Desenha só a página atual (no celular); os outros modelos nem chegam a ser criados
+      function render(options = {}) {
+        const term = search.value.trim().toLocaleLowerCase('pt-BR');
+        const list = allFiles.filter(file => file.key.includes(term));
+        const size = phoneQuery.matches ? PAGE_SIZE_PHONE : Infinity;
+        const pages = size === Infinity ? 1 : Math.max(1, Math.ceil(list.length / size));
+        page = Math.min(Math.max(page, 1), pages);
+        const slice = size === Infinity ? list : list.slice((page - 1) * size, page * size);
+
+        grid.querySelectorAll('model-viewer').forEach(viewer => viewer.removeAttribute('src'));
+        grid.textContent = '';
+        document.body.classList.remove('viewer-full');
+        slice.forEach(file => grid.append(makeCard(file)));
+        observeViewers();
+        renderPager(pages);
+
+        count.textContent = `${list.length} de ${allFiles.length} modelos` + (pages > 1 ? ` · página ${page} de ${pages}` : '');
+        message.textContent = allFiles.length && !list.length ? 'Nenhum modelo corresponde à busca.' : '';
+        if (options.scroll) grid.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+      }
+
+      pager.addEventListener('click', event => {
+        const button = event.target.closest('button');
+        if (!button || button.disabled) return;
+        page = Number(button.dataset.page);
+        render({ scroll: true });
+      });
 
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape') {
@@ -195,33 +284,28 @@
           }
         }
       });
-      search.addEventListener('input', filterCards);
+
+      search.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => { page = 1; render(); }, 250);
+      });
+
+      const onLayoutChange = () => { page = 1; if (allFiles.length) render(); };
+      if (phoneQuery.addEventListener) phoneQuery.addEventListener('change', onLayoutChange);
+      else if (phoneQuery.addListener) phoneQuery.addListener(onLayoutChange);
+
       fetch(folderApi, { headers: { Accept: 'application/vnd.github+json' } })
         .then(response => {
           if (!response.ok) throw new Error(`GitHub API respondeu ${response.status}`);
           return response.json();
         })
         .then(files => {
-          const models = files
+          allFiles = files
             .filter(file => file.type === 'file' && /\.(glb|fbx)$/i.test(file.name))
-            .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
-          models.forEach(makeCard);
-          if (!models.length) throw new Error('Nenhum arquivo GLB ou FBX foi encontrado na pasta modelos.');
-          filterCards();
-          if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver(entries => {
-              entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                  const viewer = entry.target;
-                  viewer.setAttribute('src', viewer.dataset.src);
-                  observer.unobserve(viewer);
-                }
-              });
-            }, { rootMargin: '250px' });
-            grid.querySelectorAll('model-viewer').forEach(viewer => observer.observe(viewer));
-          } else {
-            grid.querySelectorAll('model-viewer').forEach(viewer => viewer.setAttribute('src', viewer.dataset.src));
-          }
+            .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+            .map(file => ({ ...file, key: `${formatTitle(file.name)} ${file.name}`.toLocaleLowerCase('pt-BR') }));
+          if (!allFiles.length) throw new Error('Nenhum arquivo GLB ou FBX foi encontrado na pasta modelos.');
+          render();
         })
         .catch(error => {
           count.textContent = 'Não foi possível carregar a lista de modelos.';
