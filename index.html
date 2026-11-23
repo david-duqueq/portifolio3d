@@ -207,6 +207,32 @@
         footer { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
 
         /* =========================================================
+           CELULAR E TELAS ESTREITAS
+           ========================================================= */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        body { overflow-x: hidden; }
+        img, svg, video { max-width: 100%; }
+        header h1 { font-size: clamp(1.7rem, 7vw, 2.5rem); line-height: 1.2; overflow-wrap: anywhere; }
+        .logo { width: clamp(84px, 28vw, 120px); height: auto; }
+        @media (max-width: 560px) {
+            header { padding: 2rem 1rem 1.75rem; }
+            .title-sep { display: none; }
+            .title-sub { display: block; margin-top: 0.15rem; font-size: 0.7em; font-weight: 600; color: var(--text-muted); }
+            header p { font-size: 0.95rem; margin-bottom: 1.25rem; }
+            .social-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; max-width: 420px; margin: 0 auto; }
+            .social-links a { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.6rem 0.5rem; text-align: center; font-size: 0.95rem; overflow-wrap: anywhere; }
+            .social-links a:last-child:nth-child(odd) { grid-column: 1 / -1; }
+            main { padding: 1.5rem 1rem; }
+            h2 { font-size: clamp(1.2rem, 5.4vw, 1.5rem); margin-bottom: 1.1rem; }
+            .models-hub { padding: 1.4rem 1rem; margin-bottom: 2.5rem; }
+            .btn-models-page { display: block; width: 100%; padding: 0.9rem 1rem; text-align: center; }
+            .devlog-post { padding: 1.1rem; overflow-wrap: anywhere; }
+            .devlog-post h3 { font-size: 1.08rem; }
+            footer { padding: 2rem 1rem; }
+        }
+        @media (max-width: 260px) { .social-links { grid-template-columns: 1fr; } }
+
+        /* =========================================================
            ESTILOS DO EASTER EGG: DKB ARCADE
            ========================================================= */
         #snake-modal-overlay {
@@ -715,13 +741,23 @@
                 scroll-behavior: auto !important;
             }
         }
+
+        /* Jogo em telas muito estreitas */
+        @media (max-width: 340px) {
+            .console { padding: 12px 12px 18px; border-radius: 18px 18px 56px 18px; }
+            .dpad-grid { grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); }
+            .btn-round { width: 44px; height: 44px; }
+            .action-pad { gap: 10px; padding-right: 0; }
+            .snake-badge { font-size: 7px; }
+            #btn-close-snake { padding: 4px 8px; font-size: 10px; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <img src="DKB.svg" alt="Logo DKB" class="logo" width="120" height="120" decoding="async">
-        <h1><span id="easter-egg-trigger" title="Clique para jogar">David Duque</span> - Portfólio 3D</h1>
+        <h1><span id="easter-egg-trigger" title="Clique para jogar">David Duque</span><span class="title-sep"> - </span><span class="title-sub">Portfólio 3D</span></h1>
         <p>Artista 3D & Desenvolvedor Indie. Baixe meus assets gratuitamente e acompanhe o desenvolvimento do meu jogo.</p>
         <div class="social-links">
             <a href="https://www.youtube.com/@davidstudio_1690/featured" target="_blank" rel="noopener noreferrer">YouTube</a>
