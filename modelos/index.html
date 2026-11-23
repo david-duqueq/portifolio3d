@@ -6,11 +6,14 @@
   <meta name="theme-color" content="#121214">
   <meta name="description" content="Explore e baixe os modelos 3D de David Duque.">
   <title>Modelos 3D — David Duque</title>
-  <link rel="icon" type="image/png" href="../DKB.png">
-  <link rel="apple-touch-icon" href="../DKB.png">
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="preconnect" href="https://ajax.googleapis.com">
   <style>
     :root { color-scheme: dark; --bg: #121214; --card: #1e1e24; --accent: #2ee86f; --text: #f4f4f6; --muted: #a0a0ab; --border: #2a2a32; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    h1, h2, h3 { overflow-wrap: anywhere; }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55; }
     body.viewer-full { overflow: hidden; }
@@ -47,6 +50,10 @@
     .pager button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: #07110a; font-weight: 700; }
     .pager button:disabled { opacity: .4; cursor: default; }
     .pager .gap { align-self: center; padding: 0 .15rem; color: var(--muted); }
+    .preview-idle { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .55rem; padding: 1rem; text-align: center; color: var(--muted); font-size: .82rem; background: radial-gradient(circle at 50% 40%, #1d2a22 0%, #16161b 70%); }
+    .preview-idle svg { width: 46px; height: 46px; fill: var(--accent); opacity: .9; }
+    .preview-idle .view3d { padding: .6rem 1.2rem; border: 0; border-radius: 8px; background: var(--accent); color: #07110a; font: inherit; font-size: .95rem; font-weight: 750; cursor: pointer; }
+    .preview-idle .view3d:hover { filter: brightness(.9); }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
   </style>
 </head>
@@ -65,7 +72,7 @@
     <nav class="pager" id="pager" aria-label="Páginas de modelos" hidden></nav>
     <p class="message" id="message" role="status"></p>
   </main>
-  <footer>Os arquivos são carregados diretamente deste repositório. Modelos GLB podem ser visualizados em 3D; outros formatos ficam disponíveis para download.</footer>
+  <footer>Os arquivos ficam neste repositório. Clique em “Ver em 3D” para abrir um modelo (um por vez, para a página ficar leve); outros formatos ficam disponíveis para download.</footer>
   <script>
     (() => {
       const folderApi = 'https://api.github.com/repos/david-duqueq/portifolio3d/contents/modelos';
@@ -101,70 +108,7 @@
         if (canPreview) {
           const preview = document.createElement('div');
           preview.className = 'preview';
-          const viewer = document.createElement('model-viewer');
-          viewer.setAttribute('alt', `Visualização 3D de ${cleanTitle}`);
-          viewer.setAttribute('camera-controls', '');
-          if (!reducedMotion) viewer.setAttribute('auto-rotate', '');
-          viewer.setAttribute('loading', 'lazy');
-          viewer.setAttribute('touch-action', 'pan-y');
-          viewer.setAttribute('shadow-intensity', '1');
-          viewer.setAttribute('environment-image', 'neutral');
-          viewer.setAttribute('interaction-prompt', 'none');
-          viewer.dataset.src = file.download_url;
-
-          const tools = document.createElement('div');
-          tools.className = 'viewer-tools';
-          const actions = [
-            ['zoom-in', 'Aproximar', '+'],
-            ['zoom-out', 'Afastar', '−'],
-            ['reset', 'Voltar à posição inicial', '↺'],
-            ['spin', 'Alternar giro automático', '⟳'],
-            ['full', 'Tela cheia', '⛶']
-          ];
-          actions.forEach(([action, label, icon]) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.dataset.act = action;
-            button.title = label;
-            button.setAttribute('aria-label', label);
-            if (action === 'spin') {
-              button.setAttribute('aria-pressed', String(!reducedMotion));
-              if (!reducedMotion) button.classList.add('on');
-            }
-            button.textContent = icon;
-            tools.append(button);
-          });
-
-          const note = document.createElement('div');
-          note.className = 'preview-note';
-          note.textContent = 'Carregando visualização 3D…';
-          viewer.addEventListener('load', () => { note.hidden = true; });
-          viewer.addEventListener('error', () => { note.textContent = 'Pré-visualização indisponível. O arquivo ainda pode ser baixado.'; });
-          tools.addEventListener('click', event => {
-            const button = event.target.closest('button');
-            if (!button) return;
-            const action = button.dataset.act;
-            if (action === 'zoom-in' || action === 'zoom-out') {
-              if (!viewer.loaded) return;
-              const orbit = viewer.getCameraOrbit();
-              const factor = action === 'zoom-in' ? 0.8 : 1.25;
-              viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius * factor}m`;
-            } else if (action === 'reset') {
-              viewer.cameraOrbit = 'auto auto auto';
-              viewer.cameraTarget = 'auto auto auto';
-              viewer.fieldOfView = 'auto';
-            } else if (action === 'spin') {
-              const spinning = !viewer.hasAttribute('auto-rotate');
-              viewer.toggleAttribute('auto-rotate', spinning);
-              button.setAttribute('aria-pressed', String(spinning));
-              button.classList.toggle('on', spinning);
-            } else if (action === 'full') {
-              const fullscreen = preview.classList.toggle('is-full');
-              document.body.classList.toggle('viewer-full', fullscreen);
-              viewer.setAttribute('touch-action', fullscreen ? 'none' : 'pan-y');
-            }
-          });
-          preview.append(viewer, tools, note);
+          showPlaceholder(preview, file);
           card.append(preview);
         }
 
@@ -186,24 +130,133 @@
         return card;
       }
 
-      // Só os modelos visíveis (e perto da tela) começam a baixar
-      function observeViewers() {
-        if (observer) observer.disconnect();
-        const viewers = grid.querySelectorAll('model-viewer');
-        if (!('IntersectionObserver' in window)) {
-          viewers.forEach(viewer => viewer.setAttribute('src', viewer.dataset.src));
+// ---- 3D sob demanda: nada pesado carrega até alguém clicar em "Ver em 3D", e só um modelo fica ligado por vez ----
+      const MODEL_VIEWER_URL = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js';
+      let libPromise = null;
+      let active = null;
+
+      function loadLib() {
+        if (!libPromise) libPromise = import(MODEL_VIEWER_URL).catch(error => { libPromise = null; throw error; });
+        return libPromise;
+      }
+
+      function showPlaceholder(preview, file) {
+        const title = formatTitle(file.name);
+        preview.textContent = '';
+        preview.classList.remove('is-full');
+        const idle = document.createElement('div');
+        idle.className = 'preview-idle';
+        const icon = document.createElement('span');
+        icon.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.4 7.8 12 11.3 5.6 7.8 12 4.3ZM5 9.5l6 3.3v6.5l-6-3.3V9.5Zm8 9.8v-6.5l6-3.3v6.5l-6 3.3Z"/></svg>';
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'view3d';
+        button.textContent = 'Ver em 3D';
+        button.setAttribute('aria-label', `Ver ${title} em 3D`);
+        const hint = document.createElement('span');
+        hint.textContent = file.size > 30 * 1024 * 1024
+          ? `Arquivo grande (${formatSize(file.size)}): pode demorar`
+          : `Clique para carregar (${formatSize(file.size)})`;
+        const warm = () => { loadLib().catch(() => {}); };
+        button.addEventListener('pointerenter', warm, { once: true });
+        button.addEventListener('focus', warm, { once: true });
+        button.addEventListener('click', () => activate(preview, file));
+        idle.append(icon, button, hint);
+        preview.append(idle);
+      }
+
+      function deactivate(skipRestore) {
+        if (!active) return;
+        const { preview, file } = active;
+        active = null;
+        const viewer = preview.querySelector('model-viewer');
+        if (viewer) { viewer.removeAttribute('src'); viewer.remove(); }
+        document.body.classList.remove('viewer-full');
+        if (!skipRestore) showPlaceholder(preview, file);
+      }
+
+      async function activate(preview, file) {
+        deactivate();
+        active = { preview, file };
+        const title = formatTitle(file.name);
+        preview.textContent = '';
+        const note = document.createElement('div');
+        note.className = 'preview-note';
+        note.textContent = 'Carregando visualização 3D…';
+        preview.append(note);
+        try {
+          await loadLib();
+        } catch (error) {
+          note.textContent = 'Não foi possível carregar o visualizador. O arquivo ainda pode ser baixado.';
           return;
         }
-        observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const viewer = entry.target;
-              viewer.setAttribute('src', viewer.dataset.src);
-              observer.unobserve(viewer);
-            }
-          });
-        }, { rootMargin: phoneQuery.matches ? '80px' : '250px' });
-        viewers.forEach(viewer => observer.observe(viewer));
+        if (!active || active.preview !== preview) return; // outro modelo foi aberto enquanto carregava
+
+        const viewer = document.createElement('model-viewer');
+        viewer.setAttribute('alt', `Visualização 3D de ${title}`);
+        viewer.setAttribute('camera-controls', '');
+        if (!reducedMotion) viewer.setAttribute('auto-rotate', '');
+        viewer.setAttribute('touch-action', 'pan-y');
+        viewer.setAttribute('shadow-intensity', '1');
+        viewer.setAttribute('environment-image', 'neutral');
+        viewer.setAttribute('interaction-prompt', 'none');
+        viewer.setAttribute('src', file.download_url);
+
+        const tools = document.createElement('div');
+        tools.className = 'viewer-tools';
+        const actions = [
+          ['zoom-in', 'Aproximar', '+'],
+          ['zoom-out', 'Afastar', '−'],
+          ['reset', 'Voltar à posição inicial', '↺'],
+          ['spin', 'Alternar giro automático', '⟳'],
+          ['full', 'Tela cheia', '⛶'],
+          ['close', 'Fechar o 3D', '✕']
+        ];
+        actions.forEach(([action, label, icon]) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.dataset.act = action;
+          button.title = label;
+          button.setAttribute('aria-label', label);
+          if (action === 'spin') {
+            button.setAttribute('aria-pressed', String(!reducedMotion));
+            if (!reducedMotion) button.classList.add('on');
+          }
+          button.textContent = icon;
+          tools.append(button);
+        });
+        viewer.addEventListener('load', () => { note.hidden = true; });
+        viewer.addEventListener('error', () => {
+          note.hidden = false;
+          note.textContent = 'Pré-visualização indisponível. O arquivo ainda pode ser baixado.';
+        });
+        tools.addEventListener('click', event => {
+          const button = event.target.closest('button');
+          if (!button) return;
+          const action = button.dataset.act;
+          if (action === 'zoom-in' || action === 'zoom-out') {
+            if (!viewer.loaded) return;
+            const orbit = viewer.getCameraOrbit();
+            const factor = action === 'zoom-in' ? 0.8 : 1.25;
+            viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius * factor}m`;
+          } else if (action === 'reset') {
+            viewer.cameraOrbit = 'auto auto auto';
+            viewer.cameraTarget = 'auto auto auto';
+            viewer.fieldOfView = 'auto';
+          } else if (action === 'spin') {
+            const spinning = !viewer.hasAttribute('auto-rotate');
+            viewer.toggleAttribute('auto-rotate', spinning);
+            button.setAttribute('aria-pressed', String(spinning));
+            button.classList.toggle('on', spinning);
+          } else if (action === 'full') {
+            const fullscreen = preview.classList.toggle('is-full');
+            document.body.classList.toggle('viewer-full', fullscreen);
+            viewer.setAttribute('touch-action', fullscreen ? 'none' : 'pan-y');
+          } else if (action === 'close') {
+            deactivate();
+          }
+        });
+        preview.append(viewer, tools, note);
       }
 
       // Lista de páginas com reticências: 1 … 4 5 6 … 12
@@ -255,11 +308,10 @@
         page = Math.min(Math.max(page, 1), pages);
         const slice = size === Infinity ? list : list.slice((page - 1) * size, page * size);
 
-        grid.querySelectorAll('model-viewer').forEach(viewer => viewer.removeAttribute('src'));
+        deactivate(true);
         grid.textContent = '';
         document.body.classList.remove('viewer-full');
         slice.forEach(file => grid.append(makeCard(file)));
-        observeViewers();
         renderPager(pages);
 
         count.textContent = `${list.length} de ${allFiles.length} modelos` + (pages > 1 ? ` · página ${page} de ${pages}` : '');
